@@ -1,0 +1,61 @@
+{% extends 'base+nav.html.twig' %}
+
+{% block body %}
+
+	<h2 class="text-center pt-3 pb-3">Administration</h2>
+
+	<h3 class="pt-3 pb-3"><u>{{ app.request.get('entity') }}</u></h3>
+
+	{# Table listant les entités #}
+	<table class="table table-hover">
+	    <thead>
+		    <tr>
+
+		    	{% if app.request.get('entity') == 'utilisateur' %}
+		    	<th scope="col">Email</th>
+		    	{% else %}
+				<th scope="col">Libelle</th>
+		    	{% endif %}
+
+		    	<th scope="col">Action</th>
+	    	</tr>
+	    </thead>
+	    <tbody>
+
+	    	{% for entite in entites %}
+		    <tr>
+
+		    	{% if app.request.get('entity') == 'utilisateur' %}
+			    <td>{{ entite.email }}</td>
+			    {% else %}
+				<td>{{ entite.libelle }}</td>
+			    {% endif %}
+
+			    <td><a href={{ path('admin_supprimer', {'entity': app.request.get('entity'), 'id': entite.id}) }}>supprimer</a></td>
+		    </tr>
+	    	{% endfor %}
+	    	
+	    </tbody>
+    </table>
+
+	{# Message de prévention #}
+	<div class="alert alert-danger">
+  		<strong>Attention ! </strong>Supprimer une entité peut altérer le bon fonctionnement de la plateforme (voir DocumentationDasDoc/enums).
+  		Si vous êtes sûrs de ce que vous faîtes, pensez également à supprimer en amont les entités qui lui sont liés (voir DocumentationDasDoc/MLD).
+	</div>
+
+	{# Bouton pour ajouter une entité #}
+	{% if app.request.get('entity') == 'utilisateur' %}
+		{% set path %}{{ path('security_register') }}{% endset %}
+	{% else %}
+		{% set path %}{{ path('admin_ajouter', {'entity': app.request.get('entity')}) }}{% endset %}
+	{% endif %}
+
+	<form method="POST" action={{ path }}>
+		<input type="submit"
+		name="Ok"
+		value="Ajouter une entité : {{ app.request.get('entity') }}"
+		class="btn btn-primary">
+	</form>
+
+{% endblock %}

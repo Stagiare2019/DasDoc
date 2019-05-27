@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <title>DasDoc</title>
+
+        {% block stylesheets %}
+
+            {# thème css : flatly (téléchargé depuis "https://bootswatch.com/4/flatly/bootstrap.min.css") #}
+            <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+
+        {% endblock %}
+
+    </head>
+    <header>
+
+    		{% block nav %}	
+    		{% endblock %}
+
+    </header>
+    <body>
+
+        <div class="container">
+
+            {% block body %}
+            {% endblock %}
+
+        </div>
+
+        {# javascript #}
+        {% block scripts %}
+        {% endblock %}
+
+    </body>
+</html>

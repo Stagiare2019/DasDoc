@@ -1,0 +1,27 @@
+{# Pour ne pas avoir le nav #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    {% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+    {{ form_start(form) }}
+
+    {# 'full_name': 'email' est nécessaire car sinon le nom est du style "form['email']" et l'authenticator ne comprend pas ce champs... #}
+    {{ form_row(form.email, {'full_name': 'email'}) }}
+    {{ form_row(form.password, {'full_name': 'password'}) }}
+    
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="remember_me" name="_remember_me" checked/>
+        <label class="form-check-label" for="remember_me">Rester connecté</label>
+    </div>
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+    <button class="btn btn-success" type="submit">Se connecter</button>
+
+    {{ form_end(form) }}
+
+{% endblock %}

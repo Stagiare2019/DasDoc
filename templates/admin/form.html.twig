@@ -1,0 +1,16 @@
+{% extends 'base+nav.html.twig' %}
+
+{% block body %}
+
+	<h2 class="text-center pt-3 pb-3">Administration</h2>
+
+	<h3 class="pt-3 pb-3"><u>{{ app.request.get('entity') }}</u></h3>
+
+	{{ form_start(form) }}
+
+	{{ form_widget(form) }}
+	<div class="text-center"><button class="btn btn-success" type="submit">Ajouter</button></div>
+
+	{{ form_end(form) }}
+
+{% endblock %}

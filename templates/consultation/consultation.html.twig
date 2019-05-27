@@ -1,0 +1,76 @@
+{% extends 'base+nav.html.twig' %}
+
+{% block body %}
+	
+	<h2 class="text-center pt-3 pb-3">Actes en cours</h2>
+
+	<h3>Historique des actions</h3>
+
+	{# Table des actions #}
+	<table class="table table-bordered table-striped table-hover">
+	    <thead>
+		    <tr>
+		    	<th scope="col">Type</th>
+		    	<th scope="col">Date</th>
+		    	<th scope="col">Numero</th>
+		    	<th scope="col">Nature</th>
+		    	<th scope="col">Matière</th>
+		    	<th scope="col">Objet de l'acte</th>
+	    	</tr>
+	    </thead>
+	    <tbody>
+
+	    	{% for action in historique %}
+		    <tr>
+		    	<td>{{ action.fkType }}</a></td>
+		    	<td>{{ action.date|date('d/m/Y') }}</a></td>
+
+		    	{% if action.fkActe is not null %}
+			    <td><a href="{{ asset('FAUXDGS/' ~ action.fkActe.nomPDF) }}" onclick="window.open(this.href); return false;">
+			    	{{ action.fkActe.numero }}</a></td>
+			    <td>{{ action.fkActe.fkNature }}</a></td>
+			    <td>{{ action.fkActe.fkMatiere }}</a></td>
+			    <td>{{ action.fkActe.objet }}</td>
+		    	{% endif %}
+
+		    </tr>
+	    	{% endfor %}
+	    	
+	    </tbody>
+    </table>
+
+	<h3>Brouillons</h3>
+
+	{# Table des brouillons #}
+	<table id="brouillons" class="table table-bordered table-striped table-hover">
+	    <thead>
+		    <tr>
+		      	<th class="th-sm">Numéro</th>
+				<th class="th-sm">Nature</th>
+		      	<th class="th-sm">Matière</th>
+		      	<th class="th-sm">Objet</th>
+		      	<th class="th-sm">Actions</th>
+		    </tr>
+		</thead>
+		<tbody>
+
+		    {% for acte in brouillons %}
+
+		    	<tr>
+		    		<td><a href="{{ asset('FAUXDGS/' ~ acte.nomPDF) }}">{{ acte.numero }}</a></td>
+		    		<td>{{ acte.fkNature }}</td>
+		    		<td>{{ acte.fkMatiere }}</td>
+				    <td>{{ acte.objet }}</td>
+				    <td><a href={{ path('gestionnaire_suppression', {'id': acte.id}) }}>
+				    	<img src="/Pictogrammes/acte_supprimert.png" alt="supprimer"></a> / 
+				    	<a href={{ path('gestionnaire_modification', {'id': acte.id}) }}>
+				    	<img src="/Pictogrammes/acte_editert.png" alt="modifier"></a>
+				    </td>
+		    	</tr>
+
+	    	{% endfor %}
+
+		</tbody>
+	</table>
+
+{% endblock %}

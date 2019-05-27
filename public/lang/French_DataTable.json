@@ -1,0 +1,23 @@
+{
+	"sEmptyTable":     "Aucun résultat pour cette recherche",
+	"sInfo":           "résultats _START_ à _END_ sur _TOTAL_",
+	"sInfoEmpty":      "",
+	"sInfoFiltered":   "(filtré d'un total de _MAX_ actes)",
+	"sInfoPostFix":    "",
+	"sInfoThousands":  " ",
+	"sLengthMenu":     "Afficher _MENU_ résultats",
+	"sLoadingRecords": "Chargement...",
+	"sProcessing":     "Traitement...",
+	"sSearch":         "Rechercher des mot-clés sur toutes les colonnes: ",
+	"sZeroRecords":    "Aucun résultat ne correspond",
+	"oPaginate": {
+		"sFirst":    "Premier",
+		"sLast":     "Dernier",
+		"sNext":     "Suivant",
+		"sPrevious": "Précédent"
+	},
+	"oAria": {
+		"sSortAscending":  ": activer pour trier la colonne dans l'odre ascendant",
+		"sSortDescending": ": activer pour trier la colonne dans l'odre descendant"
+	}
+}

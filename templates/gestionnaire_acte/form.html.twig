@@ -1,0 +1,108 @@
+{% extends 'base+nav.html.twig' %}
+
+{% block stylesheets %}
+
+	{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+{% endblock %}
+
+{% block body %}
+
+	<h2 class="text-center pt-3 pb-3">Ajouter un acte</h2>
+
+	{{ form_start(form) }}
+
+	{# Champs obligatoires #}
+	{{ form_row(form.fkNature, {'label': "Nature de l'acte *"}) }}
+
+	{{ form_row(form.objet, {'label': "Objet *"}) }}
+
+	{{ form_row(form.fkMatiere, {'label': "Matière de l'acte *"}) }}
+
+	{# (copiage et modification du code source généré par {{ form_row() }}
+	pour gérer layout horizontal) #}
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2 required" for="acte_dateDecision">Date de décision *</label>
+		<div class="col-sm-4">
+			<input type="text" id="acte_dateDecision" name="acte[dateDecision]" required="required" placeholder="jj/mm/aaaa (Cliquez pour utiliser le calendrier)" class="datepicker form-control" />
+		</div>
+    </div>
+
+	{{ form_row(form.numero, {'label': "Numéro *"}) }}
+
+	{% if creation %}
+		{{ form_row(form.file, {'label': "Fichier *"}) }}
+	{% else %}
+		{{ form_row(form.nomPDF, {'label': "Nom du pdf sur le disque *"}) }}
+	{% endif %}
+
+	{# Champs optionnels #}
+	{{ form_row(form.pieceJointes, {'label': "Pièces jointes"}) }}
+
+	{{ form_row(form.fkService, {'label': "Service"}) }}
+
+	{{ form_row(form.motcles, {'label': "Mot-clés"}) }}
+
+	{# (copiage et modification du code source généré par {{ form_row() }}
+	pour gérer layout horizontal) #}
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2" for="acte_dateEffectiviteDebut">Date de début d'effectivité</label>
+		<div class="col-sm-4">
+			<input type="text" id="acte_dateEffectiviteDebut" name="acte[dateEffectiviteDebut]" placeholder="jj/mm/aaaa (Cliquez pour utiliser le calendrier)" class="datepicker form-control" />
+		</div>
+	</div>
+
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2" for="acte_dateEffectiviteFin">Date de fin d'effectivité</label>
+		<div class="col-sm-4">
+			<input type="text" id="acte_dateEffectiviteFin" name="acte[dateEffectiviteFin]" placeholder="jj/mm/aaaa (Cliquez pour utiliser le calendrier)" class="datepicker form-control" />
+		</div>
+	</div>
+
+	{{ form_row(form.description, {'label': "Description"}) }}
+
+	{# Boutons de submit #}
+	{% if creation %}
+		<div class="text-center">
+			<button class="btn btn-success btn-lg" type="submit" name="brouillon">Enregistrer comme brouillon</button>
+			<button class="btn btn-success btn-lg" type="submit">Ajouter Acte</button>
+		</div>
+	{% else %}
+		<div class="text-center">
+			<button class="btn btn-success btn-lg" type="submit">Modifier Acte</button>
+		</div>
+	{% endif %}
+	
+	{# Donne le statut valide au form => permet à symfony de convenablement gérer les contraintes de validité #}
+	{% do form.dateDecision.setRendered %}
+	{% do form.dateEffectiviteDebut.setRendered %}
+	{% do form.dateEffectiviteFin.setRendered %}
+	{{ form_end(form) }}
+
+{% endblock %}
+
+{% block scripts %}
+
+	{{ parent() }}
+	
+	{# scripts datepicker #}
+	{# doc .datepicker() -> "http://api.jqueryui.com/datepicker/" #}
+	{# dépendances : jquery.js (déjà importé -> nav) et jquery-ui.js #}
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+			integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+			crossorigin="anonymous"></script>
+	<script>
+  	$( function() {
+    	$( ".datepicker" ).datepicker( {
+    		dateFormat: "dd/mm/yy",
+    		dayNames: [ "Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi" ],
+    		dayNamesMin: [ "Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa" ],
+    		dayNamesShort: [ "Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam" ],
+    		monthNames: [ "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre" ],
+    		monthNamesShort: [ "Jan", "Fev", "Mars", "Avr", "Mai", "Jun", "Jul", "Aout", "Sep", "Oct", "Nov", "Dec" ]
+    	});
+  	} );
+  	</script>
+
+{% endblock %}

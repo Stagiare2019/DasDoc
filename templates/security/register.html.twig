@@ -1,0 +1,15 @@
+{% extends 'base+nav.html.twig' %}
+
+{% block body %}
+
+	{% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
+
+	{{ form_start(form) }}
+
+	{{ form_widget(form) }}
+
+	<button class="btn btn-success" type="submit">Ajouter</button>
+
+	{{ form_end(form) }}
+
+{% endblock %}

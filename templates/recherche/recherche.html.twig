@@ -1,0 +1,128 @@
+{% extends 'base+nav.html.twig' %}
+
+{% block stylesheets %}
+
+	{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css"/>
+	<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+{% endblock %}
+
+{% block body %}
+
+	<h2 class="text-center pt-3 pb-3">Recherche</h2>
+	
+	{# form #}
+	{{ form_start(form) }}
+
+	{{ form_row(form.nature, {'label': "Nature de l'acte"}) }}
+
+	{{ form_row(form.numero, {'label': "Numéro"}) }}
+
+	{{ form_row(form.motcles, {'label': "Mot-clés"}) }}
+
+	{{ form_row(form.matiere, {'label': "Matière de l'acte"}) }}
+
+	{# (copiage et modification du code source généré par {{ form_row() }}
+	pour mettre 2 dates sur une même ligne + gérer layout horizontal) #}
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2" for="recherche_dateAjoutDebut">Date d'ajout</label>
+		<div class="col-sm-4">
+			<input type="text" id="recherche_dateAjoutDebut" name="recherche[dateAjoutDebut]" placeholder="jj/mm/aaaa (Cliquez pour utiliser le calendrier)" class="datepicker form-control" />
+		</div>
+		<label class="col-form-label col-sm-1" for="recherche_dateAjoutFin">jusqu'au</label>
+		<div class="col-sm-4">
+			<input type="text" id="recherche_dateAjoutFin" name="recherche[dateAjoutFin]" placeholder="jj/mm/aaaa (Cliquez pour utiliser le calendrier)" class="datepicker form-control" />
+		</div>
+    </div>
+
+	<div class="form-group row">
+		<label class="col-form-label col-sm-2" for="recherche_dateDecisionDebut">Date de décision</label>
+		<div class="col-sm-4">
+			<input type="text" id="recherche_dateDecisionDebut" name="recherche[dateDecisionDebut]" placeholder="jj/mm/aaaa (Cliquez pour utiliser le calendrier)" class="datepicker form-control" />
+		</div>
+		<label class="col-form-label col-sm-1" for="recherche_dateDecisionFin">jusqu'au</label>
+		<div class="col-sm-4">
+			<input type="text" id="recherche_dateDecisionFin" name="recherche[dateDecisionFin]" placeholder="jj/mm/aaaa (Cliquez pour utiliser le calendrier)" class="datepicker form-control" />
+		</div>
+    </div>
+
+	<button class="btn btn-success btn-lg btn-block mt-4 mb-4" type="submit">Rechercher</button>
+	
+	{# Donne le statut valide au form => permet à symfony de convenablement gérer les contraintes de validité #}
+	{% do form.dateAjoutDebut.setRendered %}
+	{% do form.dateAjoutFin.setRendered %}
+	{% do form.dateDecisionDebut.setRendered %}
+	{% do form.dateDecisionFin.setRendered %}
+	{{ form_end(form) }}
+
+
+	{# Table des résultats #}
+	<div class="jumbotron">
+		<table id="resultats" class="table table-bordered table-striped table-hover">
+			<thead>
+			    <tr>
+			      	<th class="th-sm">Numéro</th>
+			      	<th class="th-sm">Etat</th>
+					<th class="th-sm">Nature</th>
+			      	<th class="th-sm">Matière</th>
+			      	<th class="th-sm">Objet</th>
+			    </tr>
+			</thead>
+			<tbody>
+
+			    {% for acte in resultats %}
+			    <tr>
+			    	<td><a href="{{ asset('FAUXDGS/' ~ acte.nomPDF) }}" onclick="window.open(this.href); return false;">
+			    		{{ acte.numero }}</a></td>
+			    	<td>{{ acte.fkEtat }}</td>
+			    	<td>{{ acte.fkNature }}</td>
+			    	<td>{{ acte.fkMatiere }}</td>
+					<td>{{ acte.objet }}</td>
+			    </tr>
+		    	{% endfor %}
+
+			</tbody>
+		</table>
+	</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+	{{ parent() }}
+
+	{# scripts datepicker #}
+	{# doc .datepicker() -> "http://api.jqueryui.com/datepicker/" #}
+	{# dépendances : jquery.js (déjà importé -> nav) et jquery-ui.js #}
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+			integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+			crossorigin="anonymous"></script>
+	<script>
+  	$( function() {
+    	$( ".datepicker" ).datepicker( {
+    		dateFormat: "dd/mm/yy",
+    		dayNames: [ "Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi" ],
+    		dayNamesMin: [ "Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa" ],
+    		dayNamesShort: [ "Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam" ],
+    		monthNames: [ "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre" ],
+    		monthNamesShort: [ "Jan", "Fev", "Mars", "Avr", "Mai", "Jun", "Jul", "Aout", "Sep", "Oct", "Nov", "Dec" ]
+    	});
+  	} );
+  	</script>
+
+	{# scripts datatables #}
+	{# dépendances -> "https://cdn.datatables.net/" (sélectionner bootstrap 4) #}
+	<script type="text/javascript" src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function() {
+	    $('#resultats').DataTable( {
+	        "language": {
+	            "url": "/lang/French_DataTable.json"
+	        }
+	    } );
+	} );
+	</script>
+
+{% endblock %}

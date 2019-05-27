@@ -1,0 +1,26 @@
+{% extends 'base+nav.html.twig' %}
+
+{% block body %}
+
+	<h3>Confirmation</h3>
+
+	<p>Êtes-vous sûr de vouloir supprimer cet acte ? Vous pouvez le modifier si des informations sont éronées. <a style="text-decoration: none;" href={{ path('gestionnaire_modification', {'id': acte.id}) }}><img src="/Pictogrammes/acte_editert.png" alt="">modifier</a></p>
+    
+	<table class="table">
+		<tbody>
+		    <tr>
+		    	<td><a href="{{ asset('FAUXDGS/' ~ acte.nomPDF) }}">{{ acte.numero }}</td>
+		    	<td>{{ acte.fkEtat }}</td>
+				<td>{{ acte.fkNature }}</td>
+				<td>{{ acte.fkMatiere }}</td>
+				<td>{{ acte.objet }}</td>
+		   	</tr>
+	    </tbody>
+	</table>
+
+	<form method="post">
+		<button type="submit" class="btn btn-danger" name="suppr">Supprimer</button>
+		<button type="submit" class="btn btn-primary" name="annul">Annuler</button>
+	</form>
+
+{% endblock %}
