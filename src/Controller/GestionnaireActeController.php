@@ -27,7 +27,6 @@ class GestionnaireActeController extends AbstractController
         $acte = new Acte();
         $form = $this->createForm(ActeType::class, $acte);
 
-        dump($acte);
         $form->handleRequest($request);
         if ( $form->isSubmitted() && $form->isValid() ) {
 
