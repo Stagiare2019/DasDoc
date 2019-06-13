@@ -1,26 +1,40 @@
-{# Pour ne pas avoir le nav #}
-{% extends 'base.html.twig' %}
+{% extends "base.html.twig" %}
+
+{# 
+    Ce template affiche le formulaire de login
+#}
 
 {% block body %}
 
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
-
-    {% form_theme form 'bootstrap_4_layout.html.twig' %}
+    {# Cette div sert à espacer le form et le haut de la fenêtre #}
+    <div class="mt-5 mb-5"></div>
 
     {{ form_start(form) }}
 
-    {# 'full_name': 'email' est nécessaire car sinon le nom est du style "form['email']" et l'authenticator ne comprend pas ce champs... #}
-    {{ form_row(form.email, {'full_name': 'email'}) }}
-    {{ form_row(form.password, {'full_name': 'password'}) }}
+    {# 'full_name' est nécessaire car par défault l'attribut "full_name" prend la valeur "form['email']"
+    => l'authenticator ne comprend pas cette valeur donc on la remplace par "email" 
+
+    L'authenticator (voir src/Security/LoginFormAuthenticator) est un fichier php utilisé par
+    le composant symfony "Security" qui gére tout seul la connexion et la déconnexion.
+
+    #}
+    {{ form_row(form.email, {'full_name': 'email', 'label': "Email"}) }}
+
+    {{ form_row(form.password, {'full_name': 'password', 'label': "Mot de passe"}) }}
     
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="remember_me" name="_remember_me" checked/>
+    {# csrf token #}
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+    {# checkbox "Rester connecté" #}
+    <div class="text-center mt-4 mb-4">
+        <input class="form-check-input" type="checkbox" id="remember_me" name="_remember_me" checked>
         <label class="form-check-label" for="remember_me">Rester connecté</label>
     </div>
-    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-    <button class="btn btn-success" type="submit">Se connecter</button>
+
+    {# Bouton de connexion #}
+    <div class="text-center">
+        <button class="btn btn-success" type="submit">Se connecter</button>
+    </div>
 
     {{ form_end(form) }}
 

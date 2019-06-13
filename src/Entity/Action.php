@@ -51,7 +51,6 @@ class Action
     public function setFkType(?TypeAction $fkType): self
     {
         $this->fkType = $fkType;
-
         return $this;
     }
 
@@ -63,7 +62,6 @@ class Action
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
-
         return $this;
     }
 
@@ -75,7 +73,6 @@ class Action
     public function setFkActe(?Acte $fkActe): self
     {
         $this->fkActe = $fkActe;
-
         return $this;
     }
 
@@ -87,7 +84,6 @@ class Action
     public function setFkUtilisateur(?Utilisateur $fkUtilisateur): self
     {
         $this->fkUtilisateur = $fkUtilisateur;
-
         return $this;
     }
 }

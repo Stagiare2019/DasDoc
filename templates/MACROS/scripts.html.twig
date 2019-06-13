@@ -1,0 +1,161 @@
+{# 
+    Ce template contient les macros de tous les scripts et importations de scripts.
+    Ils font effet uniquement sur des classes donc attention à bien nommer les attributs "class" des éléments concernés
+    pour que les scripts fassent effet sur eux -> class="datepicker" par ex
+
+    Les scripts faisant effet sur un élément en particulier sont à mettre dans le template contenant l'élément
+
+#}
+
+{% macro dropdown() %}
+
+	{# Scripts assurant le fonctionnement des dropdowns #}
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+			integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+			crossorigin="anonymous"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.15.0/popper.min.js"
+			integrity="sha256-1XfFQxRfNvDJW3FdZ+xlo2SbodG2+rFArw6XsVzu3bc="
+			crossorigin="anonymous"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"
+			integrity="sha256-CjSoeELFOcH0/uxWu6mC/Vlrc1AARqbm/jiiImDGV3s="
+			crossorigin="anonymous"></script>
+	{#
+		scripts importés : 
+			- jquery.js
+			- popper.js
+			- bootstrap.js
+		dernières versions depuis le 04/06/2019
+	#}
+
+{% endmacro %}
+
+{% macro datepicker() %}
+
+	{# Scripts assurant le fonctionnement des datepickers #}
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+			integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+			crossorigin="anonymous"></script>
+	<script>
+  	$( function() {
+    	$( ".datepicker" ).datepicker( {
+    		dateFormat: "dd/mm/yy",
+    		dayNames: [ "Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi" ],
+    		dayNamesMin: [ "Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa" ],
+    		dayNamesShort: [ "Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam" ],
+    		monthNames: [ "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre" ],
+    		monthNamesShort: [ "Jan", "Fev", "Mars", "Avr", "Mai", "Jun", "Jul", "Aout", "Sep", "Oct", "Nov", "Dec" ]
+    	});
+  	} );
+  	</script>
+  	{#
+  		dépendances :
+  			- jquery.js (déjà importé -> nav)
+  			- jquery-ui.js
+		documentation des méthodes et attributs de datepicker() :
+			- "http://api.jqueryui.com/datepicker/"
+		dernière version depuis le 04/06/2019 
+  	#}
+
+{% endmacro %}
+
+{% macro datatable() %}
+
+	{# Scripts assurant le fonctionnement des tables de données #}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/jquery.dataTables.min.js"
+			integrity="sha256-t5ZQTZsbQi8NxszC10CseKjJ5QeMw5NINtOXQrESGSU="
+			crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/dataTables.bootstrap4.min.js"
+			integrity="sha256-hJ44ymhBmRPJKIaKRf3DSX5uiFEZ9xB/qx8cNbJvIMU="
+			crossorigin="anonymous"></script>
+	<script>
+	$(document).ready(function() {
+	    $('.datatable').DataTable( {
+	        "language": {
+	            "url": "/json/French_DataTable.json"
+	        }
+	    } );
+	} );
+	</script>
+	{#
+		dépendances (voir "https://cdn.datatables.net/" (sélectionner bootstrap 4)) : 
+			- datatables.jquery.js
+			- datatables.bootstrap4.js
+		dernières versions depuis le 04/06/2019 
+	#}
+
+{% endmacro %}
+
+{% macro tagsinput() %}
+
+	{# Scripts assurant le fonctionnement des tagsinput #}
+	<script src="/js/jquery.tagsinput-revisited.js"></script>
+	<script>
+	$('.tagsinput').tagsInput({
+		placeholder: 'Ajouter un mot-clé',
+  		maxChars: 50
+	});
+	$('.tagsinput').tagsInput({
+  		autocomplete: {option: value, option: value}
+	});
+	</script>
+  	{#
+  		dépendances :
+  			- jquery.js (déjà importé -> nav)
+  			- jquery-ui.js (déjà importé -> datepickers)
+  		documentation des méthodes et attributs de tagsInput() :
+  			- "https://github.com/underovsky/jquery-tagsinput-revisited"
+		dernière version depuis le 04/06/2019 
+  	#}
+
+{% endmacro %}
+
+{% macro dropzone() %}
+
+	{# Scripts assurant le fonctionnement des dropzones #}
+  	{#<script src="/js/dropzone.js"></script>
+  	<script>
+	Dropzone.autoDiscover = false;
+	$(function() {
+        var dropzone_default = new Dropzone(".dropzone", {
+            url: "{{ path('gestionnaire_ajout') }}",
+            paramName: "pieceJointes",
+            autoProcessQueue: false,
+            //maxFiles: 1,
+            //dictMaxFilesExceeded: 'Only 1 Image can be uploaded',
+            //acceptedFiles: 'image/*',
+            //maxFilesize: 3,  // in Mb
+            addRemoveLinks: true,
+            init: function () {
+                this.on("maxfilesexceeded", function(file) {
+                    this.removeFile(file);
+                });
+                dz = this;
+                this.on("sending", function(file, xhr, formData) {
+                	dd(dz);
+                	dz.processQueue();
+                    formData.append("acte_file", jQuery("#acte_file").val());
+		            formData.append("acte_fkNature", jQuery("#acte_fkNature").val());
+		            formData.append("acte_objet", jQuery("#acte_objet").val());
+		            formData.append("acte_fkMatiere", jQuery("#acte_fkMatiere").val());
+		            formData.append("acte_dateDecision", jQuery("#acte_dateDecision").val());
+		            formData.append("acte_numero", jQuery("#acte_numero").val());
+		            formData.append("acte_nomPDF", jQuery("#acte_nomPDF").val());
+
+		            formData.append("acte_fkService", jQuery("#acte_fkService").val());
+		            formData.append("acte_motcles", jQuery("#acte_motcles").val());
+		            formData.append("acte_dateEffectiviteDebut", jQuery("#acte_dateEffectiviteDebut").val());
+		            formData.append("acte_dateEffectiviteFin", jQuery("#acte_dateEffectiviteFin").val());
+		            formData.append("acte_description", jQuery("#acte_description").val());
+                });
+                this.on("success", function(file, response) {
+                    if (response.uploaded) 
+                        alert('File Uploaded: ' + response.fileName);
+                });
+            }
+        });
+    });
+    </script>#}
+
+{% endmacro %}

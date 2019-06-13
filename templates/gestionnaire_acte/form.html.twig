@@ -1,9 +1,21 @@
-{% extends 'base+nav.html.twig' %}
+{% extends "base+nav.html.twig" %}
+
+{# 
+    Ce template affiche le formulaire d'ajout d'un acte
+
+    Le formulaire possède des champs obligatoires et des champs optionnels.
+	N.B. : Ce formulaire sert également pour la modification d'un acte pour éviter la duplication de code
+	(il y a peu de changements entre les 2 au niveau de l'affichage
+	=> le champs "file" disparaît + les données doivent être préinitialisées)
+	Les changements sont indiqués par des balises "{% if creation %}"
+#}
 
 {% block stylesheets %}
 
 	{{ parent() }}
 	<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="/css/jquery.tagsinput-revisited.css">
+	{#<link rel="stylesheet" type="text/css" href="/css/dropzone.css"> En développement (4 éléments commentés) #}
 
 {% endblock %}
 
@@ -13,71 +25,103 @@
 
 	{{ form_start(form) }}
 
-	{# Champs obligatoires #}
-	{{ form_row(form.fkNature, {'label': "Nature de l'acte *"}) }}
+	{# CHAMPS OBLIGATOIRES : (fichier à uploader -> si creation) + nature + objet + matière + dateDécision + numero + nomPDF #}
+	<h5 class="pt-2 pb-2"><u>Champs obligatoires</u></h5>
 
-	{{ form_row(form.objet, {'label': "Objet *"}) }}
-
-	{{ form_row(form.fkMatiere, {'label': "Matière de l'acte *"}) }}
-
-	{# (copiage et modification du code source généré par {{ form_row() }}
-	pour gérer layout horizontal) #}
-	<div class="form-group row">
-		<label class="col-form-label col-sm-2 required" for="acte_dateDecision">Date de décision *</label>
-		<div class="col-sm-4">
-			<input type="text" id="acte_dateDecision" name="acte[dateDecision]" required="required" placeholder="jj/mm/aaaa (Cliquez pour utiliser le calendrier)" class="datepicker form-control" />
+		{# input file "file" #}
+		{% if creation %}
+		<div class="form-group row">
+		    <label class="col-form-label col-sm-2 required" for="acte_file">Fichier *</label>
+		    <div class="col-sm-4">
+		        <input type="file" id="acte_file" name="acte[file]" required="required" class="form-control-file">
+		    </div>
 		</div>
-    </div>
+		{% endif %}
 
-	{{ form_row(form.numero, {'label': "Numéro *"}) }}
+		{{ form_row(form.fkNature, {'label': "Nature de l'acte *"}) }}
 
-	{% if creation %}
-		{{ form_row(form.file, {'label': "Fichier *"}) }}
-	{% else %}
+		{{ form_row(form.objet, {'label': "Objet *"}) }}
+
+		{{ form_row(form.fkMatiere, {'label': "Matière de l'acte *"}) }}
+
+		{# "dateDecision" #}
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2 required" for="acte_dateDecision">Date de décision *</label>
+			<div class="col-sm-2">
+				<input type="text" id="acte_dateDecision" name="acte[dateDecision]" required="required" placeholder="jj/mm/aaaa" class="datepicker form-control" />
+			</div>
+	    </div>
+
+		{{ form_row(form.numero, {'label': "Numéro *"}) }}
+
 		{{ form_row(form.nomPDF, {'label': "Nom du pdf sur le disque *"}) }}
-	{% endif %}
 
-	{# Champs optionnels #}
-	{{ form_row(form.pieceJointes, {'label': "Pièces jointes"}) }}
+	{# CHAMPS OPTIONNELS : pieceJointes, service, motcles, dateEffectiviteDebut, dateEffectiviteFin, description #}
+	<h5 class="pt-4 pb-2"><u>Champs optionnels</u></h5>
+		
+		{#
 
-	{{ form_row(form.fkService, {'label': "Service"}) }}
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2" for="myDropzone">Pièces jointes</label>
+			<div class="col-sm-10">
+				<input type="file" id="acte_pieceJointes" name="acte[pieceJointes]" class="form-control-file" multiple="multiple">
+			</div>
+		</div> 
 
-	{{ form_row(form.motcles, {'label': "Mot-clés"}) }}
+		En développement (4 éléments commentés) #}
 
-	{# (copiage et modification du code source généré par {{ form_row() }}
-	pour gérer layout horizontal) #}
-	<div class="form-group row">
-		<label class="col-form-label col-sm-2" for="acte_dateEffectiviteDebut">Date de début d'effectivité</label>
-		<div class="col-sm-4">
-			<input type="text" id="acte_dateEffectiviteDebut" name="acte[dateEffectiviteDebut]" placeholder="jj/mm/aaaa (Cliquez pour utiliser le calendrier)" class="datepicker form-control" />
+		{{ form_row(form.fkService, {'label': "Service"}) }}
+
+		{# "motcles" + "dateEffectiviteDebut" + "dateEffectiviteFin" #}
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2" for="acte_motcles">Mot-clés</label>
+			<div class="col-sm-10">
+				<input name="acte[motcles]" id="tags" class="tagsinput">
+	    	</div>
+	    </div>
+
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2" for="acte_dateEffectiviteDebut">Date de début d'effectivité</label>
+			<div class="col-sm-2">
+				<input type="text" id="acte_dateEffectiviteDebut" name="acte[dateEffectiviteDebut]" placeholder="jj/mm/aaaa" class="datepicker form-control" />
+			</div>
 		</div>
-	</div>
 
-	<div class="form-group row">
-		<label class="col-form-label col-sm-2" for="acte_dateEffectiviteFin">Date de fin d'effectivité</label>
-		<div class="col-sm-4">
-			<input type="text" id="acte_dateEffectiviteFin" name="acte[dateEffectiviteFin]" placeholder="jj/mm/aaaa (Cliquez pour utiliser le calendrier)" class="datepicker form-control" />
+		<div class="form-group row">
+			<label class="col-form-label col-sm-2" for="acte_dateEffectiviteFin">Date de fin d'effectivité</label>
+			<div class="col-sm-2">
+				<input type="text" id="acte_dateEffectiviteFin" name="acte[dateEffectiviteFin]" placeholder="jj/mm/aaaa" class="datepicker form-control" />
+			</div>
 		</div>
-	</div>
 
-	{{ form_row(form.description, {'label': "Description"}) }}
+		{{ form_row(form.description, {'label': "Description"}) }}
 
 	{# Boutons de submit #}
-	{% if creation %}
-		<div class="text-center">
-			<button class="btn btn-success btn-lg" type="submit" name="brouillon">Enregistrer comme brouillon</button>
-			<button class="btn btn-success btn-lg" type="submit">Ajouter Acte</button>
-		</div>
-	{% else %}
-		<div class="text-center">
-			<button class="btn btn-success btn-lg" type="submit">Modifier Acte</button>
-		</div>
-	{% endif %}
+	<div class="text-center">
+
+		{% if creation %}
+
+		<button class="btn btn-success btn-lg col-md-3 ml-2 mr-2" type="submit" name="brouillon">Enregistrer comme brouillon</button>
+		<button class="btn btn-success btn-lg col-md-3 ml-2 mr-2" type="submit">Ajouter Acte</button>
+
+		{% else %}
+
+		<button class="btn btn-success btn-lg col-md-3" type="submit">Modifier Acte</button>
+
+		{% endif %}
+
+	</div>
 	
-	{# Donne le statut valide au form => permet à symfony de convenablement gérer les contraintes de validité #}
+	{# Permet à Symfony de savoir qu'on s'est occupé nous-même de l'affichage de certains champs #}
+	{% if creation %}
+		{% do form.file.setRendered %}
+	{% endif %}
 	{% do form.dateDecision.setRendered %}
+	{#{% do form.pieceJointes.setRendered %} En développement (4 éléments commentés) #}
+	{% do form.motcles.setRendered %}
 	{% do form.dateEffectiviteDebut.setRendered %}
 	{% do form.dateEffectiviteFin.setRendered %}
+
 	{{ form_end(form) }}
 
 {% endblock %}
@@ -86,23 +130,28 @@
 
 	{{ parent() }}
 	
-	{# scripts datepicker #}
-	{# doc .datepicker() -> "http://api.jqueryui.com/datepicker/" #}
-	{# dépendances : jquery.js (déjà importé -> nav) et jquery-ui.js #}
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
-			integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
-			crossorigin="anonymous"></script>
+	{% import "MACROS/scripts.html.twig" as scripts %}
+
+	{{ scripts.datepicker() }}
+  	{% if not creation %} {# Si acte en modification => initialise les datepickers #}
 	<script>
-  	$( function() {
-    	$( ".datepicker" ).datepicker( {
-    		dateFormat: "dd/mm/yy",
-    		dayNames: [ "Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi" ],
-    		dayNamesMin: [ "Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa" ],
-    		dayNamesShort: [ "Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam" ],
-    		monthNames: [ "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre" ],
-    		monthNamesShort: [ "Jan", "Fev", "Mars", "Avr", "Mai", "Jun", "Jul", "Aout", "Sep", "Oct", "Nov", "Dec" ]
-    	});
-  	} );
+  		$( function() {
+			$('#acte_dateDecision').datepicker('setDate',"{{ form.dateDecision.vars.value }}");
+			$('#acte_dateEffectiviteDebut').datepicker('setDate',"{{ form.dateEffectiviteDebut.vars.value }}");
+			$('#acte_dateEffectiviteFin').datepicker('setDate',"{{ form.dateEffectiviteFin.vars.value }}");
+  		} );
   	</script>
+  	{% endif %}
+
+	{{ scripts.tagsinput() }}
+	{% if not creation %} {# Si acte en modification => initialise les motcles #}
+	<script>
+  		$( function() {
+			$('#tags').importTags("{{ motcles }}");
+  		} );
+  	</script>
+  	{% endif %}
+
+	{{ scripts.dropzone() }} {# en développement => Cela n'importera rien (que des commentaires) #}
 
 {% endblock %}

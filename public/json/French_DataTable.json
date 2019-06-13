@@ -8,7 +8,7 @@
 	"sLengthMenu":     "Afficher _MENU_ résultats",
 	"sLoadingRecords": "Chargement...",
 	"sProcessing":     "Traitement...",
-	"sSearch":         "Rechercher des mot-clés sur toutes les colonnes: ",
+	"sSearch":         "Rechercher sur toutes les colonnes: ",
 	"sZeroRecords":    "Aucun résultat ne correspond",
 	"oPaginate": {
 		"sFirst":    "Premier",

@@ -9,7 +9,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FamilleMatiereRepository")
- * @UniqueEntity(fields={"libelle","abreviation"})
+ * @UniqueEntity("libelle")
  */
 class FamilleMatiere
 {
@@ -24,11 +24,6 @@ class FamilleMatiere
      * @ORM\Column(type="string", length=63, unique=true)
      */
     private $libelle;
-
-    /**
-     * @ORM\Column(type="string", length=15, unique=true)
-     */
-    private $abreviation;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Matiere", mappedBy="fkFamille")
@@ -53,17 +48,6 @@ class FamilleMatiere
     public function setLibelle(string $libelle): self
     {
         $this->libelle = $libelle;
-        return $this;
-    }
-
-    public function getAbreviation(): ?string
-    {
-        return $this->abreviation;
-    }
-
-    public function setAbreviation(string $abreviation): self
-    {
-        $this->abreviation = $abreviation;
         return $this;
     }
 

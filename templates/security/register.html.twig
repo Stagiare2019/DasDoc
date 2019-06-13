@@ -1,14 +1,26 @@
-{% extends 'base+nav.html.twig' %}
+{% extends "base+nav.html.twig" %}
+
+{# 
+	Ce template affiche le formulaire d'ajout d'un utilisateur
+#}
 
 {% block body %}
 
-	{% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
+	{# Cette div sert à espacer le form et le nav #}
+	<div class="mt-5 mb-5"></div>
 
 	{{ form_start(form) }}
 
-	{{ form_widget(form) }}
+	{{ form_row(form.email, {'label': "Email"}) }}
 
-	<button class="btn btn-success" type="submit">Ajouter</button>
+	{{ form_row(form.password, {'label': "Mot de passe"}) }}
+
+	{{ form_row(form.confirm_password, {'label': "Confirmer mot de passe"}) }}
+
+	{# Bouton d'ajout #}
+	<div class="text-center">
+		<button class="btn btn-success" type="submit">Ajouter</button>
+	</div>
 
 	{{ form_end(form) }}
 

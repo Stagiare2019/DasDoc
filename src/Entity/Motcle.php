@@ -21,12 +21,6 @@ class Motcle
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\TypeMotcle", inversedBy="motcles")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $fkType;
-
-    /**
      * @ORM\Column(type="string", length=63, unique=true)
      */
     private $libelle;
@@ -44,17 +38,6 @@ class Motcle
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getFkType(): ?TypeMotcle
-    {
-        return $this->fkType;
-    }
-
-    public function setFkType(?TypeMotcle $fkType): self
-    {
-        $this->fkType = $fkType;
-        return $this;
     }
 
     public function getLibelle(): ?string

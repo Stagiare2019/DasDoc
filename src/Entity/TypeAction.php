@@ -48,7 +48,6 @@ class TypeAction
     public function setLibelle(string $libelle): self
     {
         $this->libelle = $libelle;
-
         return $this;
     }
 

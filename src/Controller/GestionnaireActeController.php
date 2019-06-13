@@ -9,6 +9,7 @@ use App\Entity\Motcle;
 use App\Entity\PieceJointe;
 use App\Entity\TypeAction;
 use App\Form\ActeType;
+use App\Service\GestionnaireActeHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
@@ -22,38 +23,36 @@ class GestionnaireActeController extends AbstractController
     /**
      * @Route("/acte/ajout", name="gestionnaire_ajout")
      */
-    public function ajout(Request $request, UserInterface $user)
+    public function ajout(Request $request, UserInterface $user, GestionnaireActeHelper $helper)
     {
+        // Création d'un object Acte pour utiliser Doctrine
         $acte = new Acte();
+        // Création d'un objet formulaire basé sur l'objet Acte (avec les champs et les contraintes adéquates). 
         $form = $this->createForm(ActeType::class, $acte);
 
         $form->handleRequest($request);
         if ( $form->isSubmitted() && $form->isValid() ) {
 
-            //On prépare des données
+            //On prépare des données selon le bouton de submit utilisé ("Ajouter" ou  "Enregistrer en brouillon") 
             $file = $form->get('file')->getData();
-            if ( isset($_POST['brouillon']) ) {
-                $etat = "Brouillon";
-                $libelleTypeAction = "Enregistrement d'acte en brouillon";
-            }
-            else {
-                $etat = "Valide";
-                $libelleTypeAction = "Ajout d'acte";
-            }
+            $idEtat = (isset($_POST['brouillon']) ? 
+                $this->getParameter('id_etat_brouillon') : $this->getParameter('id_etat_valide'));
+            $idTypeAction = (isset($_POST['brouillon']) ? 
+                $this->getParameter('id_typeAction_brouillon') : $this->getParameter('id_typeAction_ajout'));
 
-            //On ajoute les infos complémentaires à l'acte
-            $acte->setNomPDF($acte->getNumero().' - '.$acte->getObjet().'.'.$file->guessExtension());
-            $acte->setFkEtat($this->getDoctrine()->getRepository(EtatActe::class)->findOneByLibelle($etat));
+            //On ajoute des infos complémentaires à l'acte (non-renseignées par le form)
+            $acte->setFkEtat($helper->getEtat($idEtat));
 
-            // L'upload du fichier
-            /** @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
-            $file->move($this->getParameter('pdf_directory'), $acte->getNomPDF());
+            // On uploade le fichier
+            $helper->uploaderFichierSurDisque($this->getParameter('pdf_directory'),$file,$acte->getNomPDF());
 
-            //On met à jour la DB
+            // MAJ de la DB (motcles, acte, action)
+            $helper->ajouterMotcles($acte,explode(',',$form->get('motcles')->getData()));
             $manager = $this->getDoctrine()->getManager();
             $manager->persist($acte);
-            $manager->persist($this->creerAction($user,$acte,$libelleTypeAction));
+            $helper->creerAction($idTypeAction,$acte);
             $manager->flush();
+
             return $this->redirectToRoute('consultation');
 
         }
@@ -69,48 +68,35 @@ class GestionnaireActeController extends AbstractController
     /**
      * @Route("/acte/modification/{id}", name="gestionnaire_modification")
      */
-    public function modification(Request $request, Acte $acte, UserInterface $user)
+    public function modification(Request $request, Acte $acte, UserInterface $user, GestionnaireActeHelper $helper)
     {
-        //On recharge le fichier dans $acte et on stocke l'ancien nom du PDF
-        $acte->setFile(new File($this->getParameter('pdf_directory').'/'.$acte->getNomPDF()));
-        $oldNomPDF = $acte->getNomPDF();
-
         $form = $this->createForm(ActeType::class, $acte);
+
+        //On recharge des données(le file) dans $acte et on stocke l'ancien nom du PDF
+        $acte->setFile(new File($this->getParameter('pdf_directory').$acte->getNomPDF()));
+        $oldNomPDF = $acte->getNomPDF();
 
         $form->handleRequest($request);
         if ( $form->isSubmitted() && $form->isValid() ) {
 
-            //On prépare des données en fonction du type d'enregistrement
-            if ( isset($_POST['brouillon']) ) {
-                $etat = "Brouillon";
-                $libelleTypeAction = "Modification d'acte";
-            }
-            else {
-                $etat = "Valide";
-                $libelleTypeAction = "Complétion d'acte";
-            }
+            // Renommage du fichier
+            $helper->renommerFichierSurDisque($this->getParameter('pdf_directory'),$oldNomPDF,$acte->getNomPDF());
 
-            // Le renommage du fichier (si changement dans le path)
-            if( $acte->getNomPDF() != $oldNomPDF ) {
-                $fs = new Filesystem();
-                $fs->rename($this->getParameter('pdf_directory').'/'.$oldNomPDF,
-                    $this->getParameter('pdf_directory').'/'.$acte->getNomPDF());
-            }
-
-            //On ajoute les infos complémentaires à l'acte
-            $acte->setFkEtat($this->getDoctrine()->getRepository(EtatActe::class)->findOneByLibelle($etat));
-
+            // MAJ de la DB (motcles, acte, action)
+            $helper->majMotcles($acte,explode(',',$form->get('motcles')->getData()));
             $manager = $this->getDoctrine()->getManager();
             $manager->persist($acte);
-            $manager->persist($this->creerAction($user,$acte,$libelleTypeAction));
+            $helper->creerAction($this->getParameter('id_typeAction_modification'),$acte);
             $manager->flush();
-            return $this->redirectToRoute('recherche');
+
+            return $this->redirectToRoute('consultation');
 
         }
 
         return $this->render('gestionnaire_acte/form.html.twig', [
             'form' => $form->createView(),
-            'creation' => false
+            'creation' => false,
+            'motcles' => $helper->getMotclesString($acte)
         ]);
     }
 
@@ -119,59 +105,40 @@ class GestionnaireActeController extends AbstractController
     /**
      * @Route("/acte/suppression/{id}", name="gestionnaire_suppression")
      */
-    public function suppression(Request $request, Acte $acte, UserInterface $user)
+    public function suppression(Request $request, Acte $acte, UserInterface $user, GestionnaireActeHelper $helper)
     {
+        // Si suppression annulée
         if ( isset($_POST['annul']) )
-            return $this->redirectToRoute('recherche');
+            return $this->redirectToRoute('consultation');
 
+        // Si suppression confirmée
         if ( isset($_POST['suppr']) ) {
 
-            //On récupère les entités liés à Acte
-            $pjsDeActe = $this->getDoctrine()->getRepository(PieceJointe::class)->findByFkActe($acte);
+            // On récupère les entités liées à $acte
             $actionsDeActe = $this->getDoctrine()->getRepository(Action::class)->findByFkActe($acte);
-            $motClesDeActe = $acte->getMotCles();
 
-            //On "nullifie" les fk des actions
+            // On "nullifie" les fkActe des actions (les actions ne sont pas supprimées)
             foreach ($actionsDeActe as $action) {
                 $action->setFkActe(null);
             }
 
-            //Suppression du fichier sur le disque
-            $fs = new Filesystem();
-            $fs->remove($this->getParameter('pdf_directory').'/'.$acte->getNomPDF());
+            $helper->supprimerFichierSurDisque($this->getParameter('pdf_directory'),$acte->getNomPDF());
 
+            // MAJ de la DB (motcles, PJs, acte, action)
             $manager = $this->getDoctrine()->getManager();
-            //On supprimer les pieces jointes
-            foreach ($pjsDeActe as $pj) {
-                $fs->remove($this->getParameter('pdf_directory').'/'.$pj->getNomPDF());
-                $manager->remove($pj);
-            }
-            //On supprimer l'acte de ses motclés
-            foreach ($motClesDeActe as $motcle) {
-                $motcle->removeActe($acte);
-            }
+            $helper->supprimerMotcles($acte);
             $manager->remove($acte);
-            $manager->persist($this->creerAction($user,null,"Suppression d'acte"));
+            $helper->creerAction($this->getParameter('id_typeAction_suppression'),null);
             $manager->flush();
-            return $this->redirectToRoute('recherche');
+
+            return $this->redirectToRoute('consultation');
 
         }
 
+        // Affiche confirmation suppression
         return $this->render('gestionnaire_acte/confirmation_suppression.html.twig', [
             'acte' => $acte
         ]);
     }
 
-
-
-    private function creerAction(UserInterface $user, Acte $acte = null, String $libelleTypeAction): Action
-    {
-        $action = new Action();
-        $action->setDate(new \DateTime('now'));
-        $action->setFkUtilisateur($user);
-        $action->setFkActe($acte);
-        $action->setFkType($this->getDoctrine()->getRepository(TypeAction::class)->findOneByLibelle($libelleTypeAction));
-
-        return $action;
-    }
 }

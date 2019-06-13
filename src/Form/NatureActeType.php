@@ -13,7 +13,6 @@ class NatureActeType extends AbstractType
     {
         $builder
             ->add('libelle')
-            ->add('abreviation')
         ;
     }
 

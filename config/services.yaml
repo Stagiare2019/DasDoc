@@ -5,7 +5,23 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'fr'
-    pdf_directory: '%kernel.project_dir%/public/FAUXDGS'
+
+    # Emplacement des pdfs
+    pdf_directory: '%kernel.project_dir%\public\FAUXDGS\'
+
+    # Emplacement des entitys
+    entity_directory: 'App\Entity\'
+
+    # Emplacement des entitys
+    form_directory: 'App\Form\'
+
+    # Ids des enums (identifient des lignes spécifiques de la DB)
+    id_etat_brouillon: '1'
+    id_etat_valide: '2'
+    id_typeAction_brouillon: '1'
+    id_typeAction_ajout: '2'
+    id_typeAction_suppression: '3'
+    id_typeAction_modification: '4'
 
 services:
     # default configuration for services in *this* file

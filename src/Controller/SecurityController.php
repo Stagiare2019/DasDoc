@@ -23,8 +23,7 @@ class SecurityController extends AbstractController
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
 
-        // Crée un Utilisateur inutile qui ne sert qu'à la création du form
-        $form = $this->createForm(UtilisateurType::class, new Utilisateur());
+        $form = $this->createForm(UtilisateurType::class);
 
         return $this->render('security/login.html.twig', [
             'form' => $form->createView(),
@@ -39,7 +38,9 @@ class SecurityController extends AbstractController
      */
     public function logout()
     {
-         #Fonction vide qui n'a "pas le temps" d'être atteinte (le firewall l'intercepte avant et redirige)
+        # Fonction vide qui n'a "pas le temps" d'être atteinte
+        # (le firewall l'intercepte avant -> déconnecte l'utilisateur courant -> redirige sur l'ancienne page)
+        # (dans notre cas, l'utilisateur est automatiquement redirigé vers la page de login après déconnexion)
     }
 
 
@@ -68,11 +69,11 @@ class SecurityController extends AbstractController
             $this->container->get('session')->set('_security_main', serialize($token));
 
             return $this->redirectToRoute('admin_lister', [
-                'entity' => $entity
+                'entity' => "Utilisateur"
             ]);
         }
 
-        //else : afficher le form de registration
+        //else : affiche le form de registration
         return $this->render('security/register.html.twig', [
             'form' => $form->createView()
         ]);

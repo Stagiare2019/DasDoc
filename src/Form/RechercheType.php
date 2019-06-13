@@ -33,18 +33,6 @@ class RechercheType extends AbstractType
                 'class' => Matiere::class,
                 'choice_label' => 'libelle'
             ])
-            ->add('dateAjoutDebut', DateType::class, [
-                'required' => false,
-                'format' => 'dd/MM/yyyy',
-                'widget' => 'single_text',
-                'html5' => false
-            ])
-            ->add('dateAjoutFin', DateType::class, [
-                'required' => false,
-                'format' => 'dd/MM/yyyy',
-                'widget' => 'single_text',
-                'html5' => false
-            ])
             ->add('dateDecisionDebut', DateType::class, [
                 'required' => false,
                 'format' => 'dd/MM/yyyy',

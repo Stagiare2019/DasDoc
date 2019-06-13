@@ -5,9 +5,11 @@ namespace App\Form;
 use App\Entity\Acte;
 use App\Entity\Matiere;
 use App\Entity\NatureActe;
+use App\Entity\PieceJointe;
 use App\Entity\Service;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -23,6 +25,17 @@ class ActeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+
+            // CHAMPS OBLIGATOIRES : (fichier à uploader -> si creation), nature, objet, matière, dateDécision, numero, nomPDF
+
+            ->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+
+                // Si l'acte est nouveau (var $acte est nulle) => on ajoute le champs 'file'
+                $acte = $event->getData();
+                if (!$acte || null === $acte->getId())
+                    $event->getForm()->add('file', FileType::class);
+    
+            })
             ->add('fkNature', EntityType::class, [
                 'class' => NatureActe::class,
                 'choice_label' => 'libelle'
@@ -38,36 +51,25 @@ class ActeType extends AbstractType
                 'html5' => false
             ])
             ->add('numero', TextType::class)
-            ->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
-                $acte = $event->getData();
-                $form = $event->getForm();
+            ->add('nomPDF', TextType::class)
 
-                // Vérifie si l'acte est nouveau (si la var $acte est nulle) => champs file
-                if (!$acte || null === $acte->getId()) {
-                    $form->add('file', FileType::class);
-                }
-                //sinon c'est qu'on le modifie => champs nomPDF
-                else {
-                    $form->add('nomPDF', TextType::class);
-                }
-            })
-
-            //options
-            ->add('pieceJointes', CollectionType::class, [
-                'required' => false,
-                'entry_type' => FileType::class,
-                'entry_options' => [
-                    'attr' => ['label' => "Pièce jointe"],
-                ]
-            ])
+            // CHAMPS OPTIONNELS
+            
+            //->add('pieceJointes', CollectionType::class, [
+            //    'required' => false,
+            //    'entry_type' => EntityType::class
+            //])
+            //
+            //En développement (4 éléments commentés)
+            
             ->add('fkService', EntityType::class, [
                 'required' => false,
                 'class' => Service::class,
                 'choice_label' => 'libelle'
             ])
-            ->add('motcles', CollectionType::class, [
-                'required' => false,
-                'entry_type' => TextType::class
+            ->add('motcles', TextType::class, [
+                'mapped' => false,
+                'required' => false
             ])
             ->add('dateEffectiviteDebut', DateType::class, [
                 'required' => false,

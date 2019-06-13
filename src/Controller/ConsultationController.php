@@ -27,7 +27,7 @@ class ConsultationController extends AbstractController
 
         //On récupère les actions qui sont des créations de brouillons par l'utilisateur
     	$brouillon_actions = $this->getDoctrine()->getRepository(Action::class)->findBy(array(
-            'fkType' => $this->getDoctrine()->getRepository(TypeAction::class)->findByLibelle("Enregistrement d'acte en brouillon"),
+            'fkType' => $this->getDoctrine()->getRepository(TypeAction::class)->findById($this->getParameter('id_etat_brouillon')),
             'fkUtilisateur' => $user
         ));
 

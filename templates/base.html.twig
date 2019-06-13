@@ -1,17 +1,41 @@
-<!DOCTYPE html>
-<html lang="fr">
-    <head>
+{#
+    
+Ce template est la base HTML de toutes les pages retournées par la plateforme.
 
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+N.B. :
+La sécurité est gérée par le composant Symfony "security"
+appelé avant cette base donc j'ai peu de contrôle dessus,
+mais je pense qu'il est efficace pour tout ce qui est sécurité de base.
+
+Les balise "{ ... }" sont des balises Twig (voir "public/documentation/twig/les_bases.txt").
+
+Il y a 4 blocks qui peuvent être remplis par des templates "enfant" (ces templates adaptent le contenu selon la requête) :
+ - "stylesheets" : contient les liens css nécessaires aux éléments du body (contient de base le thème css général).
+ - "nav" : contient le navigateur, par défault ce template n'en a pas (voir "templates/base+nav.html.twig").
+ - "body" : contient le corps de la page.
+ - "scripts" : contient les scripts JavaScripts nécessaires aux éléments du body.
+
+#}
+<!DOCTYPE html>
+
+{# les options "ng" sont utilisés par les scripts angular (tagsinput) => permettent à Angular de savoir "où sont" certaines balises #}
+<html lang="fr" ng-app="plunker">
+    <head>
 
         <title>DasDoc</title>
 
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
         {% block stylesheets %}
 
-            {# thème css : flatly (téléchargé depuis "https://bootswatch.com/4/flatly/bootstrap.min.css") #}
+            {# thème css : flatly #}
             <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+            {#
+                téléchargé en local.
+                lien de téléchargement : "https://bootswatch.com/4/flatly/bootstrap.min.css".
+                dernière version depuis le 06/05/2019.
+            #}
 
         {% endblock %}
 
@@ -22,7 +46,7 @@
     		{% endblock %}
 
     </header>
-    <body>
+    <body ng-controller="MainCtrl">
 
         <div class="container">
 
@@ -31,7 +55,6 @@
 
         </div>
 
-        {# javascript #}
         {% block scripts %}
         {% endblock %}
 

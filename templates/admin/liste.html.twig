@@ -1,61 +1,49 @@
-{% extends 'base+nav.html.twig' %}
-
+{% extends "base+nav.html.twig" %}
+{# 
+    Ce template affiche une liste des utilisateurs et des groupes ainsi que des fonctions pour les gérer.
+#}
 {% block body %}
 
 	<h2 class="text-center pt-3 pb-3">Administration</h2>
 
 	<h3 class="pt-3 pb-3"><u>{{ app.request.get('entity') }}</u></h3>
 
-	{# Table listant les entités #}
+	{# Table listant les entites #}
 	<table class="table table-hover">
 	    <thead>
 		    <tr>
-
-		    	{% if app.request.get('entity') == 'utilisateur' %}
-		    	<th scope="col">Email</th>
-		    	{% else %}
 				<th scope="col">Libelle</th>
-		    	{% endif %}
-
 		    	<th scope="col">Action</th>
 	    	</tr>
 	    </thead>
 	    <tbody>
-
 	    	{% for entite in entites %}
+
 		    <tr>
-
-		    	{% if app.request.get('entity') == 'utilisateur' %}
-			    <td>{{ entite.email }}</td>
-			    {% else %}
 				<td>{{ entite.libelle }}</td>
-			    {% endif %}
-
-			    <td><a href={{ path('admin_supprimer', {'entity': app.request.get('entity'), 'id': entite.id}) }}>supprimer</a></td>
+			    <td><a href={{ path('admin_renommer', {'entity': app.request.get('entity'), 'id': entite.id}) }}>renommer</a></td>
 		    </tr>
+
 	    	{% endfor %}
-	    	
 	    </tbody>
     </table>
 
 	{# Message de prévention #}
 	<div class="alert alert-danger">
-  		<strong>Attention ! </strong>Supprimer une entité peut altérer le bon fonctionnement de la plateforme (voir DocumentationDasDoc/enums).
-  		Si vous êtes sûrs de ce que vous faîtes, pensez également à supprimer en amont les entités qui lui sont liés (voir DocumentationDasDoc/MLD).
+  		<strong>Attention ! </strong>Supprimer une entité peut altérer le bon fonctionnement de la plateforme 
+  		(voir <a href="#">DocumentationDasDoc/enums</a>).
+  		Si vous êtes sûrs de ce que vous faîtes, pensez également à supprimer en amont les entités qui lui sont liés 
+  		(voir <a href="#">DocumentationDasDoc/MLD</a>).
 	</div>
 
 	{# Bouton pour ajouter une entité #}
-	{% if app.request.get('entity') == 'utilisateur' %}
-		{% set path %}{{ path('security_register') }}{% endset %}
-	{% else %}
-		{% set path %}{{ path('admin_ajouter', {'entity': app.request.get('entity')}) }}{% endset %}
-	{% endif %}
-
-	<form method="POST" action={{ path }}>
-		<input type="submit"
-		name="Ok"
-		value="Ajouter une entité : {{ app.request.get('entity') }}"
-		class="btn btn-primary">
+	<form method="POST" action={{ path('admin_ajouter', {'entity': app.request.get('entity')}) }}>
+		<div class="text-center">
+			<input type="submit"
+			name="Ok"
+			value="Ajouter une entité : {{ app.request.get('entity') }}"
+			class="btn btn-primary col-md-3">
+		</div>
 	</form>
 
 {% endblock %}

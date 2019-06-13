@@ -1,15 +1,24 @@
-{% extends 'base+nav.html.twig' %}
-
+{% extends "base+nav.html.twig" %}
+{# 
+    Ce template affiche un formulaire d'ajout d'une entité 
+#}
 {% block body %}
 
 	<h2 class="text-center pt-3 pb-3">Administration</h2>
 
-	<h3 class="pt-3 pb-3"><u>{{ app.request.get('entity') }}</u></h3>
+	<h3 class="pt-3 pb-3"><u>Ajouter un(e) {{ app.request.get('entity') }}</u></h3>
 
 	{{ form_start(form) }}
 
 	{{ form_widget(form) }}
-	<div class="text-center"><button class="btn btn-success" type="submit">Ajouter</button></div>
+
+	<div class="text-center">
+		{% if creation %}
+		<button class="btn btn-success col-md-2" type="submit">Ajouter</button>
+		{% else %}
+		<button class="btn btn-success col-md-2" type="submit">Renommer</button>
+		{% endif %}
+	</div>
 
 	{{ form_end(form) }}
 

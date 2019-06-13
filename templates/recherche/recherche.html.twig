@@ -1,10 +1,22 @@
-{% extends 'base+nav.html.twig' %}
+{% extends "base+nav.html.twig" %}
+
+{# 
+    Ce template affiche le formulaire de recherche ainsi qu'une datatable pour les résultats (sur la même page)
+#}
 
 {% block stylesheets %}
 
 	{{ parent() }}
+
+	{# fichiers css assurant le design de la table de données et des datepickers #}
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css"/>
 	<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	{#
+		stylesheets importés :
+			- datatables.bootstrap4.css
+			- jquery-ui.css
+		dernières versions depuis le 04/06/2019
+	#}
 
 {% endblock %}
 
@@ -12,7 +24,6 @@
 
 	<h2 class="text-center pt-3 pb-3">Rechercher</h2>
 	
-	{# form #}
 	{{ form_start(form) }}
 
 	{{ form_row(form.nature, {'label': "Nature de l'acte"}) }}
@@ -23,43 +34,42 @@
 
 	{{ form_row(form.matiere, {'label': "Matière de l'acte"}) }}
 
-	{# (copiage et modification du code source généré par {{ form_row() }}
-	pour mettre 2 dates sur une même ligne + gérer layout horizontal) #}
+	{# "Date de décision" (intervalle => 2 dates) #}
 	<div class="form-group row">
-		<label class="col-form-label col-sm-2" for="recherche_dateAjoutDebut">Date d'ajout</label>
-		<div class="col-sm-4">
-			<input type="text" id="recherche_dateAjoutDebut" name="recherche[dateAjoutDebut]" placeholder="jj/mm/aaaa (Cliquez pour utiliser le calendrier)" class="datepicker form-control" />
+
+		<label class="col-form-label col-sm-2" for="recherche_dateDecisionDebut">
+			Date de décision
+		</label>
+
+		<div class="col-sm-2">
+			<input type="text" id="recherche_dateDecisionDebut" name="recherche[dateDecisionDebut]" placeholder="jj/mm/aaaa" class="datepicker form-control" />
 		</div>
-		<label class="col-form-label col-sm-1" for="recherche_dateAjoutFin">jusqu'au</label>
-		<div class="col-sm-4">
-			<input type="text" id="recherche_dateAjoutFin" name="recherche[dateAjoutFin]" placeholder="jj/mm/aaaa (Cliquez pour utiliser le calendrier)" class="datepicker form-control" />
+
+		<label class="col-form-label col-sm-1" for="recherche_dateDecisionFin">
+			jusqu'au
+		</label>
+
+		<div class="col-sm-2">
+			<input type="text" id="recherche_dateDecisionFin" name="recherche[dateDecisionFin]" placeholder="jj/mm/aaaa" class="datepicker form-control" />
 		</div>
+		
     </div>
 
-	<div class="form-group row">
-		<label class="col-form-label col-sm-2" for="recherche_dateDecisionDebut">Date de décision</label>
-		<div class="col-sm-4">
-			<input type="text" id="recherche_dateDecisionDebut" name="recherche[dateDecisionDebut]" placeholder="jj/mm/aaaa (Cliquez pour utiliser le calendrier)" class="datepicker form-control" />
-		</div>
-		<label class="col-form-label col-sm-1" for="recherche_dateDecisionFin">jusqu'au</label>
-		<div class="col-sm-4">
-			<input type="text" id="recherche_dateDecisionFin" name="recherche[dateDecisionFin]" placeholder="jj/mm/aaaa (Cliquez pour utiliser le calendrier)" class="datepicker form-control" />
-		</div>
-    </div>
-
-	<button class="btn btn-success btn-lg btn-block mt-4 mb-4" type="submit">Rechercher</button>
+	{# Bouton "Rechercher" #}
+	<div class="text-center">
+		<button class="btn btn-success btn-lg mt-4 mb-4 col-md-2" type="submit">Rechercher</button>
+	</div>
 	
-	{# Donne le statut valide au form => permet à symfony de convenablement gérer les contraintes de validité #}
-	{% do form.dateAjoutDebut.setRendered %}
-	{% do form.dateAjoutFin.setRendered %}
+	{# Permet à Symfony de savoir qu'on s'est occupé nous-même de l'affichage de certains champs #}
 	{% do form.dateDecisionDebut.setRendered %}
 	{% do form.dateDecisionFin.setRendered %}
+
 	{{ form_end(form) }}
 
 
 	{# Table des résultats #}
 	<div class="jumbotron">
-		<table id="resultats" class="table table-bordered table-striped table-hover">
+		<table id="resultats" class="table table-bordered table-striped table-hover datatable">
 			<thead>
 			    <tr>
 			      	<th class="th-sm">Numéro</th>
@@ -70,18 +80,21 @@
 			    </tr>
 			</thead>
 			<tbody>
-
 			    {% for acte in resultats %}
+
 			    <tr>
-			    	<td><a href="{{ asset('FAUXDGS/' ~ acte.nomPDF) }}" onclick="window.open(this.href); return false;">
+			    	{# pdf_directory = l'emplacement des pdfs.
+					Le petit script "onClick" affiche le pdf du lien dans une nouvelle fenêtre.
+			    	#}
+			    	<td><a href="file:///{{ pdf_directory ~ acte.nomPDF }}" onclick="window.open(this.href); return false;">
 			    		{{ acte.numero }}</a></td>
 			    	<td>{{ acte.fkEtat }}</td>
 			    	<td>{{ acte.fkNature }}</td>
 			    	<td>{{ acte.fkMatiere }}</td>
 					<td>{{ acte.objet }}</td>
 			    </tr>
-		    	{% endfor %}
 
+		    	{% endfor %}
 			</tbody>
 		</table>
 	</div>
@@ -92,37 +105,16 @@
 
 	{{ parent() }}
 
-	{# scripts datepicker #}
-	{# doc .datepicker() -> "http://api.jqueryui.com/datepicker/" #}
-	{# dépendances : jquery.js (déjà importé -> nav) et jquery-ui.js #}
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
-			integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
-			crossorigin="anonymous"></script>
+	{% import "MACROS/scripts.html.twig" as scripts %}
+
+	{{ scripts.datepicker() }}
 	<script>
-  	$( function() {
-    	$( ".datepicker" ).datepicker( {
-    		dateFormat: "dd/mm/yy",
-    		dayNames: [ "Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi" ],
-    		dayNamesMin: [ "Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa" ],
-    		dayNamesShort: [ "Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam" ],
-    		monthNames: [ "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre" ],
-    		monthNamesShort: [ "Jan", "Fev", "Mars", "Avr", "Mai", "Jun", "Jul", "Aout", "Sep", "Oct", "Nov", "Dec" ]
-    	});
-  	} );
+  		$( function() {
+			$('#recherche_dateDecisionDebut').datepicker('setDate',"{{ form.dateDecisionDebut.vars.value }}");
+			$('#recherche_dateDecisionFin').datepicker('setDate',"{{ form.dateDecisionFin.vars.value }}");
+  		} );
   	</script>
 
-	{# scripts datatables #}
-	{# dépendances -> "https://cdn.datatables.net/" (sélectionner bootstrap 4) #}
-	<script type="text/javascript" src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
-	<script type="text/javascript" src="https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js"></script>
-	<script type="text/javascript">
-	$(document).ready(function() {
-	    $('#resultats').DataTable( {
-	        "language": {
-	            "url": "/lang/French_DataTable.json"
-	        }
-	    } );
-	} );
-	</script>
+	{{ scripts.datatable() }}
 
 {% endblock %}

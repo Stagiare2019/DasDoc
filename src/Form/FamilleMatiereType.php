@@ -13,7 +13,6 @@ class FamilleMatiereType extends AbstractType
     {
         $builder
             ->add('libelle')
-            ->add('abreviation')
         ;
     }
 

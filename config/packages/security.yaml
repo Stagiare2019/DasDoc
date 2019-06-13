@@ -44,8 +44,13 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used (les mettre dans l'ordre)
     access_control:
-        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
+        # Ligne d'exemple (attention car se lit dans l'ordre, comme une table de routage ou de pare-feu (logique))
         # - { path: ^/xxx/xxx, roles: ROLE_XXX }
 
-        - { path: ^/, roles: ROLE_USER }
+         - { path: ^/, roles: ROLE_USER }
+
+        # pour désactiver la sécurité (pour créer le premier utilisateur,
+        # décommenter cette ligne et commenter toutes les autres (les "- { path ...")
+        # - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
