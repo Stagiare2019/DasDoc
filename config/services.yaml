@@ -7,7 +7,7 @@ parameters:
     locale: 'fr'
 
     # Emplacement des pdfs
-    pdf_directory: '%kernel.project_dir%\public\FAUXDGS\'
+    pdf_directory: '%kernel.project_dir%/public/FAUXDGS/'
 
     # Emplacement des entitys
     entity_directory: 'App\Entity\'
