@@ -8,12 +8,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+/*
+
+Ce controleur est en charge de la recherche d'actes (les filtres et la manières dont ils sont utilisés)
+
+*/
+
 class RechercheController extends AbstractController
 {
     /**
      * @Route("/", name="recherche")
      * La fonction de recherche affiche le form, le traite et affiche les résultats.
-     * Le filtrage des résultats se fait en 3 fois de par la nature des données de filtrage.
+     * Le filtrage des résultats se fait en 3 étapes à cause de la nature des données de filtrage.
      */
     public function recherche(Request $request)
     {

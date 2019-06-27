@@ -13,35 +13,40 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+/*
+
+Ce controleur est en charge de l'accès à la plateforme (sécurisée par des utilisateurs compte/mdp)
+
+*/
 class SecurityController extends AbstractController
 {
     /**
+     * Affiche et traite un formulaire de login
+     *
      * @Route("/login", name="security_login")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // get the login error if there is one
-        $error = $authenticationUtils->getLastAuthenticationError();
-
+        // Création d'un formulaire vide non-lié à une instance
         $form = $this->createForm(UtilisateurType::class);
 
+        // Affichage du formulaire
         return $this->render('security/login.html.twig', [
-            'form' => $form->createView(),
-            'error' => $error
+            'form' => $form->createView()
         ]);
     }
 
 
 
     /**
+     * Déconnecte l'utilisateur courant. Cette fonction est vide car elle n'a "pas le temps" d'être atteinte :
+     * Le firewall intercepte la requête -> déconnecte l'utilisateur courant -> redirige sur l'ancienne page.
+     *
+     * Dans notre cas, l'utilisateur est automatiquement redirigé vers la page de login après déconnexion.
+     *
      * @Route("/logout", name="security_logout")
      */
-    public function logout()
-    {
-        # Fonction vide qui n'a "pas le temps" d'être atteinte
-        # (le firewall l'intercepte avant -> déconnecte l'utilisateur courant -> redirige sur l'ancienne page)
-        # (dans notre cas, l'utilisateur est automatiquement redirigé vers la page de login après déconnexion)
-    }
+    public function logout() {}
 
 
 
@@ -50,30 +55,29 @@ class SecurityController extends AbstractController
      */
     public function register(Request $request, UserPasswordEncoderInterface $encoder): Response
     {
-        //création du form lié à une var $user vide
+        // Création d'un formulaire lié à une instance vide
         $user = new Utilisateur();
         $form = $this->createForm(UtilisateurType::class, $user);
 
-        //teste si le form a été rempli, puis encode le password de $user et le migre vers la DB
+        // Traitement du formulaire (test validité, complétion de l'objet Utilisateur, m-à-j DB, redirection)
         $form->handleRequest($request);
         if ( $form->isSubmitted() && $form->isValid() ) {
+
+            // Complétion : Hashage du mdp de l'utilisateur
             $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
 
-            $manager = $this->getDoctrine()->getManager();
-            $manager->persist($user);
-            $manager->flush();
-
-            //login automatique après registration
+            // Log automatiquement sur la session de l'utilisateur crée
             $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
             $this->container->get('security.token_storage')->setToken($token);
             $this->container->get('session')->set('_security_main', serialize($token));
 
-            return $this->redirectToRoute('admin_lister', [
-                'entity' => "Utilisateur"
-            ]);
+            $manager = $this->getDoctrine()->getManager();
+            $manager->persist($user);
+            $manager->flush();
+            return $this->redirectToRoute('admin_dashboard');
         }
 
-        //else : affiche le form de registration
+        // Affichage du formulaire
         return $this->render('security/register.html.twig', [
             'form' => $form->createView()
         ]);

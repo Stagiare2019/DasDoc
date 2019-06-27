@@ -43,3 +43,12 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Service\AdminHelper:
+        arguments:
+            $entityDirectory: '%entity_directory%'
+            $formDirectory: '%form_directory%'
+
+    App\Service\GestionnaireActeHelper:
+        arguments:
+            $pdfDirectory: '%pdf_directory%'

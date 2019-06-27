@@ -55,13 +55,31 @@ class ActeType extends AbstractType
 
             // CHAMPS OPTIONNELS
             
-            //->add('pieceJointes', CollectionType::class, [
-            //    'required' => false,
-            //    'entry_type' => EntityType::class
-            //])
-            //
-            //En développement (4 éléments commentés)
-            
+            ->add('annexe1', FileType::class, [
+                'mapped' => false,
+                'required' => false
+            ])
+            ->add('objetAnnexe1', TextType::class, [
+                'mapped' => false,
+                'required' => false
+            ])
+            ->add('annexe2', FileType::class, [
+                'mapped' => false,
+                'required' => false
+            ])
+            ->add('objetAnnexe2', TextType::class, [
+                'mapped' => false,
+                'required' => false
+            ])
+            ->add('annexe3', FileType::class, [
+                'mapped' => false,
+                'required' => false
+            ])
+            ->add('objetAnnexe3', TextType::class, [
+                'mapped' => false,
+                'required' => false
+            ])
+
             ->add('fkService', EntityType::class, [
                 'required' => false,
                 'class' => Service::class,

@@ -11,6 +11,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+/*
+
+Ce controleur est en charge de la gestion pour un utilisateur de tous les actes qui sont en lien avec lui (brouillons, attente de validation, suivi, etc...)
+
+*/
+
 class ConsultationController extends AbstractController
 {
     /**
@@ -21,9 +27,11 @@ class ConsultationController extends AbstractController
         $nbActionsAffiches = 10;
         
         //On récupère l'historique de l'utilisateur
-        $historique = $this->getDoctrine()->getRepository(Action::class)->findBy(array(
-            'fkUtilisateur' => $user
-        ),array('date' => 'DESC'), $nbActionsAffiches);
+        $historique = $this->getDoctrine()->getRepository(Action::class)->findBy(
+            array('fkUtilisateur' => $user),
+            array('date' => 'DESC'), 
+            $nbActionsAffiches
+        );
 
         //On récupère les actions qui sont des créations de brouillons par l'utilisateur
     	$brouillon_actions = $this->getDoctrine()->getRepository(Action::class)->findBy(array(

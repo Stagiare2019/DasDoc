@@ -21,6 +21,11 @@ class PieceJointe
     private $id;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $objet;
+    
+    /**
      * @ORM\Column(type="string", length=255, unique=true)
      */
     private $nomPDF;
@@ -56,6 +61,17 @@ class PieceJointe
         return $this->id;
     }
 
+    public function getObjet(): ?string
+    {
+        return $this->objet;
+    }
+
+    public function setObjet(string $objet): self
+    {
+        $this->objet = $objet;
+        return $this;
+    }
+    
     public function getNomPDF(): ?string
     {
         return $this->nomPDF;
