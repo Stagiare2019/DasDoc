@@ -18,7 +18,7 @@
 	<table class="table">
 		<tbody>
 		    <tr>
-		    	<td><a href="file:///{{ pdf_directory ~ acte.nomPDF }}">{{ acte.numero }}</a></td>
+		    	<td><a href="{{ pdf_relative_directory ~ acte.nomPDF }}">{{ acte.numero }}</a></td>
 		    	<td>{{ acte.fkEtat }}</td>
 				<td>{{ acte.fkNature }}</td>
 				<td>{{ acte.fkMatiere }}</td>

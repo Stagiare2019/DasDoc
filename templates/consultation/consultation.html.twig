@@ -32,10 +32,7 @@
 		    	<td>{{ action.date|date('d/m/Y') }}</a></td>
 
 		    	{% if action.fkActe is not null %}
-		    	{# Le lien va remplacer pdf_directory par l'emplacement des pdfs et le concaténer avec le nom du PDF
-				Le petit script "onClick" affiche le pdf du lien dans une nouvelle fenêtre.
-			    #}
-			    <td><a href="file:///{{ pdf_directory ~ action.fkActe.nomPDF }}" onclick="window.open(this.href); return false;">
+			    <td><a href="{{ pdf_relative_directory ~ action.fkActe.nomPDF }}" target="_blank">
 			    	{{ action.fkActe.numero }}</a></td>
 			    <td>{{ action.fkActe.fkNature }}</a></td>
 			    <td>{{ action.fkActe.fkMatiere }}</a></td>
@@ -65,10 +62,7 @@
 		    {% for acte in brouillons %}
 
 		    <tr>
-		    	{# Le lien va remplacer pdf_directory par l'emplacement des pdfs et le concaténer avec le nom du PDF
-				Le petit script "onClick" affiche le pdf du lien dans une nouvelle fenêtre.
-			    #}
-		    	<td><a href="file:///{{ pdf_directory ~ acte.nomPDF }}" onclick="window.open(this.href); return false;">
+		    	<td><a href="{{ pdf_relative_directory ~ acte.nomPDF }}" target="_blank">
 		    		{{ acte.numero }}</a></td>
 		    	<td>{{ acte.fkNature }}</td>
 		    	<td>{{ acte.fkMatiere }}</td>

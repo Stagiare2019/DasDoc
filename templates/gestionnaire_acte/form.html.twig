@@ -62,33 +62,51 @@
 	{# CHAMPS OPTIONNELS : pieceJointes, service, motcles, dateEffectiviteDebut, dateEffectiviteFin, description #}
 	<h5 class="pt-4 pb-2"><u>Champs optionnels</u></h5>
 
-		{# inputs file "annexes" #}
+		{# inputs file + textfield "annexes" #}
 		<div class="form-group row">
-		    <label class="col-form-label col-sm-2" for="acte_annexe1">Annexe 1</label>
+		    <label class="col-form-label col-sm-2" for="acte_objetAnnexe1">Annexe 1</label>
+		    <div class="col-sm-5">
+		    	<input type="text" id="acte_objetAnnexe1" name="acte[objetAnnexe1]" class="form-control" placeholder="Veuillez compléter l'objet" value="{{ form.objetAnnexe1.vars.value }}"/>
+		    </div>
 		    <div class="col-sm-4">
+		    	{% if form.objetAnnexe1.vars.data == "" %}
 		        <input type="file" id="acte_annexe1" name="acte[annexe1]" class="form-control-file">
+		    	{% else %}
+		    	<a href="../../{{ pdf_relative_directory ~ pieceJointeChemins[0] }}" target="_blank"><img src="/img/nav/rechercher.png" alt="">voir l'annexe</a>
+		    	<a href="" onclick="supprimer(this)"><img src="/img/acte/supprimer.png" alt="">supprimer l'annexe</a>
+		    	{% endif %}
 		    </div>
 		</div>
 
-		{{ form_row(form.objetAnnexe1, {'label': "Objet de l'annexe 1"}) }}
-
 		<div class="form-group row">
-		    <label class="col-form-label col-sm-2" for="acte_annexe2">Annexe 2</label>
+		    <label class="col-form-label col-sm-2" for="acte_objetAnnexe2">Annexe 2</label>
+		    <div class="col-sm-5">
+		    	<input type="text" id="acte_objetAnnexe2" name="acte[objetAnnexe2]" class="form-control" placeholder="Veuillez compléter l'objet" value="{{ form.objetAnnexe2.vars.value }}"/>
+		    </div>
 		    <div class="col-sm-4">
+		        {% if form.objetAnnexe2.vars.data == "" %}
 		        <input type="file" id="acte_annexe2" name="acte[annexe2]" class="form-control-file">
+		    	{% else %}
+		    	<a href="../../{{ pdf_relative_directory ~ pieceJointeChemins[1] }}" target="_blank"><img src="/img/nav/rechercher.png" alt="">voir l'annexe</a>
+		    	<a href=""><img src="/img/acte/supprimer.png" alt="">supprimer l'annexe</a>
+		    	{% endif %}
 		    </div>
 		</div>
-
-		{{ form_row(form.objetAnnexe2, {'label': "Objet de l'annexe 2"}) }}
 
 		<div class="form-group row">
-		    <label class="col-form-label col-sm-2" for="acte_annexe3">Annexe 3</label>
+		    <label class="col-form-label col-sm-2" for="acte_objetAnnexe3">Annexe 3</label>
+		    <div class="col-sm-5">
+		    	<input type="text" id="acte_objetAnnexe3" name="acte[objetAnnexe3]" class="form-control" placeholder="Veuillez compléter l'objet" value="{{ form.objetAnnexe3.vars.value }}"/>
+		    </div>
 		    <div class="col-sm-4">
+		        {% if form.objetAnnexe3.vars.data == "" %}
 		        <input type="file" id="acte_annexe3" name="acte[annexe3]" class="form-control-file">
+		    	{% else %}
+		    	<a href="../../{{ pdf_relative_directory ~ pieceJointeChemins[2] }}" target="_blank"><img src="/img/nav/rechercher.png" alt="">voir l'annexe</a>
+		    	<a href=""><img src="/img/acte/supprimer.png" alt="">supprimer l'annexe</a>
+		    	{% endif %}
 		    </div>
 		</div>
-
-		{{ form_row(form.objetAnnexe3, {'label': "Objet de l'annexe 3"}) }}
 
 		{{ form_row(form.fkService, {'label': "Service"}) }}
 
@@ -137,8 +155,11 @@
 		{% do form.file.setRendered %}
 	{% endif %}
 	{% do form.annexe1.setRendered %}
+	{% do form.objetAnnexe1.setRendered %}
 	{% do form.annexe2.setRendered %}
+	{% do form.objetAnnexe2.setRendered %}
 	{% do form.annexe3.setRendered %}
+	{% do form.objetAnnexe3.setRendered %}
 	{% do form.dateDecision.setRendered %}
 	{% do form.motcles.setRendered %}
 	{% do form.dateEffectiviteDebut.setRendered %}
@@ -174,6 +195,11 @@
   	</script>
   	{% endif %}
 
-	{{ scripts.dropzone() }} {# en développement => Cela n'importera rien (que des commentaires) #}
+  	<script>
+  		function supprimer(this) {
+  			this.value = "";
+  			alert(this);
+  		}	
+  	</script>
 
 {% endblock %}

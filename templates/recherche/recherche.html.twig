@@ -86,7 +86,7 @@
 			    	{# pdf_directory = l'emplacement des pdfs.
 					Le petit script "onClick" affiche le pdf du lien dans une nouvelle fenêtre.
 			    	#}
-			    	<td><a href="file:///{{ pdf_directory ~ acte.nomPDF }}" onclick="window.open(this.href); return false;">
+			    	<td><a href="{{ pdf_relative_directory ~ acte.nomPDF }}" onclick="window.open(this.href); return false;">
 			    		{{ acte.numero }}</a></td>
 			    	<td>{{ acte.fkEtat }}</td>
 			    	<td>{{ acte.fkNature }}</td>

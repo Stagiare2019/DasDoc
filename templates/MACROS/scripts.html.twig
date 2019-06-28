@@ -9,25 +9,25 @@
 
 {% macro dropdown() %}
 
-	{# Scripts assurant le fonctionnement des dropdowns #}
-	<script src="https://code.jquery.com/jquery-3.4.1.min.js"
-			integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-			crossorigin="anonymous"></script>
+  {# Scripts assurant le fonctionnement des dropdowns #}
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"></script>
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.15.0/popper.min.js"
-			integrity="sha256-1XfFQxRfNvDJW3FdZ+xlo2SbodG2+rFArw6XsVzu3bc="
-			crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.15.0/popper.min.js"
+      integrity="sha256-1XfFQxRfNvDJW3FdZ+xlo2SbodG2+rFArw6XsVzu3bc="
+      crossorigin="anonymous"></script>
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"
-			integrity="sha256-CjSoeELFOcH0/uxWu6mC/Vlrc1AARqbm/jiiImDGV3s="
-			crossorigin="anonymous"></script>
-	{#
-		scripts importés : 
-			- jquery.js
-			- popper.js
-			- bootstrap.js
-		dernières versions depuis le 04/06/2019
-	#}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha256-CjSoeELFOcH0/uxWu6mC/Vlrc1AARqbm/jiiImDGV3s="
+      crossorigin="anonymous"></script>
+  {#
+    scripts importés : 
+      - jquery.js
+      - popper.js
+      - bootstrap.js
+    dernières versions depuis le 04/06/2019
+  #}
 
 {% endmacro %}
 
@@ -108,54 +108,5 @@
   			- "https://github.com/underovsky/jquery-tagsinput-revisited"
 		dernière version depuis le 04/06/2019 
   	#}
-
-{% endmacro %}
-
-{% macro dropzone() %}
-
-	{# Scripts assurant le fonctionnement des dropzones #}
-  	{#<script src="/js/dropzone.js"></script>
-  	<script>
-	Dropzone.autoDiscover = false;
-	$(function() {
-        var dropzone_default = new Dropzone(".dropzone", {
-            url: "{{ path('gestionnaire_ajout') }}",
-            paramName: "pieceJointes",
-            autoProcessQueue: false,
-            //maxFiles: 1,
-            //dictMaxFilesExceeded: 'Only 1 Image can be uploaded',
-            //acceptedFiles: 'image/*',
-            //maxFilesize: 3,  // in Mb
-            addRemoveLinks: true,
-            init: function () {
-                this.on("maxfilesexceeded", function(file) {
-                    this.removeFile(file);
-                });
-                dz = this;
-                this.on("sending", function(file, xhr, formData) {
-                	dd(dz);
-                	dz.processQueue();
-                    formData.append("acte_file", jQuery("#acte_file").val());
-		            formData.append("acte_fkNature", jQuery("#acte_fkNature").val());
-		            formData.append("acte_objet", jQuery("#acte_objet").val());
-		            formData.append("acte_fkMatiere", jQuery("#acte_fkMatiere").val());
-		            formData.append("acte_dateDecision", jQuery("#acte_dateDecision").val());
-		            formData.append("acte_numero", jQuery("#acte_numero").val());
-		            formData.append("acte_nomPDF", jQuery("#acte_nomPDF").val());
-
-		            formData.append("acte_fkService", jQuery("#acte_fkService").val());
-		            formData.append("acte_motcles", jQuery("#acte_motcles").val());
-		            formData.append("acte_dateEffectiviteDebut", jQuery("#acte_dateEffectiviteDebut").val());
-		            formData.append("acte_dateEffectiviteFin", jQuery("#acte_dateEffectiviteFin").val());
-		            formData.append("acte_description", jQuery("#acte_description").val());
-                });
-                this.on("success", function(file, response) {
-                    if (response.uploaded) 
-                        alert('File Uploaded: ' + response.fileName);
-                });
-            }
-        });
-    });
-    </script>#}
 
 {% endmacro %}

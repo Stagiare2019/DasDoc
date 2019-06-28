@@ -64,6 +64,15 @@ class GestionnaireActeHelper {
         return implode(",",$acte->getMotcles()->toArray());
     }
 
+    public function getArrayPathPieceJointe(Acte $acte)
+    {
+        $pathsPieceJointes;
+        foreach ($acte->getPieceJointes()->toArray() as $pj)
+            $pathsPieceJointes[] = $pj->getNomPDF();
+
+        return $pathsPieceJointes;
+    }
+
     // FACTORY (avec persistence des instances crées => pas de retour)
 
     /* Crée une instance de Action et la fait persister
@@ -95,7 +104,7 @@ class GestionnaireActeHelper {
     /* Retire les PieceJointes liés à l'acte et ajoute éventuellement les nouvelles PieceJointes */
     public function majPieceJointes(Acte $acte, Form $form = null)
     {
-        $this->supprimerPieceJointes($acte);
+        $this->supprimerPieceJointes($acte,$form);
         if (null !== $form)
             $this->ajouterPieceJointes($acte,$form);
     }
@@ -116,10 +125,12 @@ class GestionnaireActeHelper {
     // RETIRER LIENS
 
     /* Supprime les PieceJointes lié à un Acte */
-    public function supprimerPieceJointes(Acte $acte)
+    public function supprimerPieceJointes(Acte $acte, Form $form = null)
     {
         $pieceJointes = $acte->getPieceJointes()->toArray();
+        $i = 1;
         foreach ($pieceJointes as $pj) {
+            if ($pj)
             $this->manager->remove($pj);
             $this->supprimerFichier($this->pdfDirectory,$pj->getNomPDF());
         }
@@ -210,7 +221,8 @@ class GestionnaireActeHelper {
     /* Renomme un fichier dans un répertoire */
     public function renommerFichier(string $directory, string $ancienNom, string $nouveauNom)
     {
-        $this->fileSystem->rename($directory.$ancienNom, $directory.$nouveauNom);
+        if ($ancienNom !== $nouveauNom)
+            $this->fileSystem->rename($directory.$ancienNom, $directory.$nouveauNom);
     }
 
     /* Supprime un fichier dans un répertoire */

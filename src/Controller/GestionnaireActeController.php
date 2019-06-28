@@ -15,7 +15,6 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /*
 
@@ -30,7 +29,7 @@ class GestionnaireActeController extends AbstractController
      *
      * @Route("/acte/ajout", name="gestionnaire_ajout")
      */
-    public function ajout(Request $request, UserInterface $user, GestionnaireActeHelper $helper)
+    public function ajout(Request $request, GestionnaireActeHelper $helper)
     {
         // Création d'un formulaire lié à une instance vide de Acte
         $form = $this->createForm(ActeType::class, $acte = new Acte());
@@ -83,7 +82,7 @@ class GestionnaireActeController extends AbstractController
      *
      * @Route("/acte/modification/{id}", name="gestionnaire_modification")
      */
-    public function modification(Request $request, Acte $acte, UserInterface $user, GestionnaireActeHelper $helper)
+    public function modification(Request $request, Acte $acte, GestionnaireActeHelper $helper)
     {
         // Création d'un formulaire prérempli lié à l'acte à modifier
         $form = $this->createForm(ActeType::class, $acte);
@@ -91,6 +90,15 @@ class GestionnaireActeController extends AbstractController
         // On recharge le fichier dans $acte et on stocke l'ancien nom du PDF pour le retouver
         $acte->setFile(new File($this->getParameter('pdf_directory').$acte->getNomPDF()));
         $oldNomPDF = $acte->getNomPDF();
+
+        // On recharge les PieceJointes (non-relatives à l'acte) dans le formulaire
+        $pieceJointes = $acte->getPieceJointes()->toArray();
+        $i = 1;
+        foreach ($pieceJointes as $pj) {
+            $form->get('objetAnnexe'.$i)->setData($pj->getObjet());
+            $form->get('annexe'.$i)->setData(new File($this->getParameter('pdf_directory').$pj->getNomPDF()));
+            $i++;
+        }
 
         // Traitement du formulaire (test validité, m-à-j disque, m-à-j DB, redirection)
         $form->handleRequest($request);
@@ -117,7 +125,8 @@ class GestionnaireActeController extends AbstractController
         return $this->render('gestionnaire_acte/form.html.twig', [
             'form' => $form->createView(),
             'creation' => false,
-            'motcles' => $helper->getStringConcatenatedMotcles($acte)
+            'motcles' => $helper->getStringConcatenatedMotcles($acte),
+            'pieceJointeChemins' => $helper->getArrayPathPieceJointe($acte)
         ]);
     }
 
@@ -128,7 +137,7 @@ class GestionnaireActeController extends AbstractController
      *
      * @Route("/acte/suppression/{id}", name="gestionnaire_suppression")
      */
-    public function suppression(Request $request, Acte $acte, UserInterface $user, GestionnaireActeHelper $helper)
+    public function suppression(Request $request, Acte $acte, GestionnaireActeHelper $helper)
     {
         // Si bouton = annuler
         if ( isset($_POST['annul']) )
