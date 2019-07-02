@@ -18,11 +18,21 @@ parameters:
 
     # Ids des enums (identifient des lignes spécifiques de la DB)
     id_etat_brouillon: '1'
-    id_etat_valide: '2'
-    id_typeAction_brouillon: '1'
-    id_typeAction_ajout: '2'
-    id_typeAction_suppression: '3'
-    id_typeAction_modification: '4'
+    id_etat_enAttenteValidation: '2'
+    id_etat_valide: '3'
+    id_etat_refuse: '4'
+    id_etat_transmis: '5'
+    id_etat_annule: '6'
+    id_etat_archive: '7'
+
+    id_typeAction_enregistrerBrouillon: '1'
+    id_typeAction_reprendreBrouillon: '2'
+    id_typeAction_envoyerValidation: '3'
+    id_typeAction_valider: '4'
+    id_typeAction_refuser: '5'
+    id_typeAction_transmettre: '6'
+    id_typeAction_annuler: '7'
+    id_typeAction_archiver: '8'
 
 services:
     # default configuration for services in *this* file

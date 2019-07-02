@@ -8,13 +8,12 @@
 
 	{{ parent() }}
 
-	{# fichiers css assurant le design de la table de données et des datepickers #}
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css"/>
 	<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	{#
-		stylesheets importés :
-			- datatables.bootstrap4.css
-			- jquery-ui.css
+		- datatables.bootstrap4.css (tableau de données)
+		- jquery-ui.css (datepickers)
+
 		dernières versions depuis le 04/06/2019
 	#}
 
@@ -24,80 +23,82 @@
 
 	<h2 class="text-center pt-3 pb-3">Rechercher</h2>
 	
-	{{ form_start(form) }}
+	{# Fomulaire #}
 
-	{{ form_row(form.nature, {'label': "Nature de l'acte"}) }}
+		{{ form_start(form) }}
 
-	{{ form_row(form.numero, {'label': "Numéro"}) }}
+		{{ form_row(form.nature, {'label': "Nature de l'acte"}) }}
 
-	{{ form_row(form.motcles, {'label': "Mot-clés"}) }}
+		{{ form_row(form.numero, {'label': "Numéro"}) }}
 
-	{{ form_row(form.matiere, {'label': "Matière de l'acte"}) }}
+		{{ form_row(form.motcles, {'label': "Mot-clés"}) }}
 
-	{# "Date de décision" (intervalle => 2 dates) #}
-	<div class="form-group row">
+		{{ form_row(form.matiere, {'label': "Matière de l'acte"}) }}
 
-		<label class="col-form-label col-sm-2" for="recherche_dateDecisionDebut">
-			Date de décision
-		</label>
+		{# "Date de décision" (intervalle => 2 dates) #}
+		<div class="form-group row">
 
-		<div class="col-sm-2">
-			<input type="text" id="recherche_dateDecisionDebut" name="recherche[dateDecisionDebut]" placeholder="jj/mm/aaaa" class="datepicker form-control" />
-		</div>
+			<label class="col-form-label col-sm-2" for="recherche_dateDecisionDebut">
+				Date de décision
+			</label>
 
-		<label class="col-form-label col-sm-1" for="recherche_dateDecisionFin">
-			jusqu'au
-		</label>
+			<div class="col-sm-2">
+				<input type="text" id="recherche_dateDecisionDebut" name="recherche[dateDecisionDebut]" placeholder="jj/mm/aaaa" class="datepicker form-control" />
+			</div>
 
-		<div class="col-sm-2">
-			<input type="text" id="recherche_dateDecisionFin" name="recherche[dateDecisionFin]" placeholder="jj/mm/aaaa" class="datepicker form-control" />
+			<label class="col-form-label col-sm-1" for="recherche_dateDecisionFin">
+				jusqu'au
+			</label>
+
+			<div class="col-sm-2">
+				<input type="text" id="recherche_dateDecisionFin" name="recherche[dateDecisionFin]" placeholder="jj/mm/aaaa" class="datepicker form-control" />
+			</div>
+			
+	    </div>
+
+		{# Bouton "Rechercher" #}
+		<div class="text-center">
+			<button class="btn btn-success btn-lg mt-4 mb-4 col-md-2" type="submit">Rechercher</button>
 		</div>
 		
-    </div>
+		{# Permet à Symfony de savoir qu'on s'est occupé nous-même de l'affichage de certains champs #}
+		{% do form.dateDecisionDebut.setRendered %}
+		{% do form.dateDecisionFin.setRendered %}
 
-	{# Bouton "Rechercher" #}
-	<div class="text-center">
-		<button class="btn btn-success btn-lg mt-4 mb-4 col-md-2" type="submit">Rechercher</button>
-	</div>
-	
-	{# Permet à Symfony de savoir qu'on s'est occupé nous-même de l'affichage de certains champs #}
-	{% do form.dateDecisionDebut.setRendered %}
-	{% do form.dateDecisionFin.setRendered %}
-
-	{{ form_end(form) }}
+		{{ form_end(form) }}
 
 
-	{# Table des résultats #}
-	<div class="jumbotron">
-		<table id="resultats" class="table table-bordered table-striped table-hover datatable">
-			<thead>
-			    <tr>
-			      	<th class="th-sm">Numéro</th>
-			      	<th class="th-sm">Etat</th>
-					<th class="th-sm">Nature</th>
-			      	<th class="th-sm">Matière</th>
-			      	<th class="th-sm">Objet</th>
-			    </tr>
-			</thead>
-			<tbody>
-			    {% for acte in resultats %}
 
-			    <tr>
-			    	{# pdf_directory = l'emplacement des pdfs.
-					Le petit script "onClick" affiche le pdf du lien dans une nouvelle fenêtre.
-			    	#}
-			    	<td><a href="{{ pdf_relative_directory ~ acte.nomPDF }}" onclick="window.open(this.href); return false;">
-			    		{{ acte.numero }}</a></td>
-			    	<td>{{ acte.fkEtat }}</td>
-			    	<td>{{ acte.fkNature }}</td>
-			    	<td>{{ acte.fkMatiere }}</td>
-					<td>{{ acte.objet }}</td>
-			    </tr>
 
-		    	{% endfor %}
-			</tbody>
-		</table>
-	</div>
+	{# DataTable des résultats #}
+
+		<div class="jumbotron">
+			<table id="resultats" class="table table-bordered table-striped table-hover datatable">
+				<thead>
+				    <tr>
+				      	<th class="th-sm">Numéro</th>
+				      	<th class="th-sm">Etat</th>
+						<th class="th-sm">Nature</th>
+				      	<th class="th-sm">Matière</th>
+				      	<th class="th-sm">Objet</th>
+				    </tr>
+				</thead>
+				<tbody>
+				    {% for acte in resultats %}
+
+				    <tr>
+				    	<td><a href="{{ pdf_relative_directory ~ acte.nomPDF }}" onclick="window.open(this.href); return false;">
+				    		{{ acte.numero }}</a></td>
+				    	<td>{{ acte.fkEtat }}</td>
+				    	<td>{{ acte.fkNature }}</td>
+				    	<td>{{ acte.fkMatiere }}</td>
+						<td>{{ acte.objet }}</td>
+				    </tr>
+
+			    	{% endfor %}
+				</tbody>
+			</table>
+		</div>
 
 {% endblock %}
 
@@ -108,7 +109,7 @@
 	{% import "MACROS/scripts.html.twig" as scripts %}
 
 	{{ scripts.datepicker() }}
-	<script>
+	<script> {# Petit script pour garder les dates après avoir appuyé sur "Rechercher" #}
   		$( function() {
 			$('#recherche_dateDecisionDebut').datepicker('setDate',"{{ form.dateDecisionDebut.vars.value }}");
 			$('#recherche_dateDecisionFin').datepicker('setDate',"{{ form.dateDecisionFin.vars.value }}");

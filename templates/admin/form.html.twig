@@ -1,6 +1,6 @@
 {% extends "base+nav.html.twig" %}
 {# 
-    Ce template affiche un formulaire d'ajout d'une entité 
+    Ce template affiche un formulaire d'ajout / de modification d'une entité 
 #}
 {% block body %}
 
@@ -16,7 +16,7 @@
 		{% if creation %}
 		<button class="btn btn-success col-md-2" type="submit">Ajouter</button>
 		{% else %}
-		<button class="btn btn-success col-md-2" type="submit">Renommer</button>
+		<button class="btn btn-success col-md-2" type="submit">Modifier</button>
 		{% endif %}
 	</div>
 

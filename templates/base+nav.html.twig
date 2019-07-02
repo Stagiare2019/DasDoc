@@ -2,11 +2,11 @@
 
 {# 
 
-IMPORTANT !!! Les templates désirant avoir le nav doivent hériter de ce template !
-
 Ce template hérite de la base et lui ajoute une barre de navigation :
- - les éléments à gauche : les actions principales sur les fichiers (consultation, ajout, recherche)
- - les éléments à droite : les actions administratives, informatives et la déconnexion
+ - à gauche : les actions principales sur les fichiers (tableau de bord, ajout, recherche)
+ - à droite : les actions administratives et la déconnexion
+
+ IMPORTANT !!! Les templates désirant avoir le nav doivent hériter de ce template !
  
 #}
 
@@ -15,14 +15,15 @@ Ce template hérite de la base et lui ajoute une barre de navigation :
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       	<div class="collapse navbar-collapse">
 
-      		{# GAUCHE du nav : liens avec pictogrammes vers les actions principales sur les fichiers #}
+      		{# GAUCHE du nav : liens avec pictogrammes vers les actions principales sur les fichiers
+      						(tableau de bord, ajouter un acte, rechercher) #}
 
 	        	<ul class="navbar-nav mr-auto">
 
 		          	<li class="nav-item">
 			            <a class="nav-link" href={{ path('consultation') }}>
 
-					    	<img src="/img/nav/actes_en_cours.png" alt=""> Actes en cours
+					    	<img src="/img/nav/actes_en_cours.png" alt=""> Tableau de bord
 
 					    </a>
 		          	</li>
@@ -45,7 +46,7 @@ Ce template hérite de la base et lui ajoute une barre de navigation :
 
 		        </ul>
 
-	        {# DROITE du nav : dropdown administratif + dropdown documentation + bouton de déconnexion #}
+	        {# DROITE du nav : dropdown administratif + bouton de déconnexion #}
 
 		        <ul class="navbar-nav ml-auto">
 		          
@@ -82,25 +83,6 @@ Ce template hérite de la base et lui ajoute une barre de navigation :
 
 						</div>
 					</div>
-					
-					{# le dropdown d'accès à la documentation #}
-					{#<div class="dropdown">
-						<button class="btn btn-outline-primary dropdown-toggle text-center ml-2" type="button" data-toggle="dropdown">
-
-						Documentation
-
-						</button>
-						<div class="dropdown-menu">
-
-							<a class="dropdown-item" href="#">
-								Truc
-							</a>
-							<a class="dropdown-item" href="#">
-								Machin
-							</a>
-
-						</div>
-					</div>#}
 
 					{# Bouton de déconnexion #}
 				   	<li class="nav-item">

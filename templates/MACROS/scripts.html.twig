@@ -1,15 +1,15 @@
 {# 
-    Ce template contient les macros de tous les scripts et importations de scripts.
-    Ils font effet uniquement sur des classes donc attention à bien nommer les attributs "class" des éléments concernés
-    pour que les scripts fassent effet sur eux -> class="datepicker" par ex
+    Ce template contient des macros pour importer les scripts.
+    
+    N.B: Ils font effet uniquement sur des classes bien définies donc attention à bien nommer les attributs "class" des éléments concernés. ex: class="datepicker" pour les datepickers
 
     Les scripts faisant effet sur un élément en particulier sont à mettre dans le template contenant l'élément
 
 #}
 
+{# Scripts assurant le fonctionnement des dropdowns #}
 {% macro dropdown() %}
 
-  {# Scripts assurant le fonctionnement des dropdowns #}
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"
       integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
       crossorigin="anonymous"></script>
@@ -22,18 +22,18 @@
       integrity="sha256-CjSoeELFOcH0/uxWu6mC/Vlrc1AARqbm/jiiImDGV3s="
       crossorigin="anonymous"></script>
   {#
-    scripts importés : 
-      - jquery.js
-      - popper.js
-      - bootstrap.js
+    - jquery.js
+    - popper.js
+    - bootstrap.js
+
     dernières versions depuis le 04/06/2019
   #}
 
 {% endmacro %}
 
+{# Scripts assurant le fonctionnement et la configuration des datepickers #}
 {% macro datepicker() %}
 
-	{# Scripts assurant le fonctionnement des datepickers #}
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
 			integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
 			crossorigin="anonymous"></script>
@@ -51,18 +51,19 @@
   	</script>
   	{#
   		dépendances :
-  			- jquery.js (déjà importé -> nav)
-  			- jquery-ui.js
+  		    - jquery.js (déjà importé -> nav)
+  		    - jquery-ui.js
 		documentation des méthodes et attributs de datepicker() :
 			- "http://api.jqueryui.com/datepicker/"
-		dernière version depuis le 04/06/2019 
+
+	    dernière version depuis le 04/06/2019 
   	#}
 
 {% endmacro %}
 
+{# Scripts assurant le fonctionnement et la traduction des tables de données #}
 {% macro datatable() %}
 
-	{# Scripts assurant le fonctionnement des tables de données #}
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/jquery.dataTables.min.js"
 			integrity="sha256-t5ZQTZsbQi8NxszC10CseKjJ5QeMw5NINtOXQrESGSU="
 			crossorigin="anonymous"></script>
@@ -82,14 +83,15 @@
 		dépendances (voir "https://cdn.datatables.net/" (sélectionner bootstrap 4)) : 
 			- datatables.jquery.js
 			- datatables.bootstrap4.js
+
 		dernières versions depuis le 04/06/2019 
 	#}
 
 {% endmacro %}
 
+{# Scripts assurant le fonctionnement des tagsinput #}
 {% macro tagsinput() %}
 
-	{# Scripts assurant le fonctionnement des tagsinput #}
 	<script src="/js/jquery.tagsinput-revisited.js"></script>
 	<script>
 	$('.tagsinput').tagsInput({
@@ -106,6 +108,7 @@
   			- jquery-ui.js (déjà importé -> datepickers)
   		documentation des méthodes et attributs de tagsInput() :
   			- "https://github.com/underovsky/jquery-tagsinput-revisited"
+
 		dernière version depuis le 04/06/2019 
   	#}
 

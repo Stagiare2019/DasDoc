@@ -34,33 +34,34 @@ class GestionnaireActeController extends AbstractController
         // Création d'un formulaire lié à une instance vide de Acte
         $form = $this->createForm(ActeType::class, $acte = new Acte());
 
-        // Traitement du formulaire (test validité, complétion des données, upload des fichiers, création d'une action, m-à-j DB, redirection)
+        // Traitement du formulaire (test validité, complétion des données, création d'une action, m-à-j DB et disque, upload du fichier, redirection)
         $form->handleRequest($request);
         if ( $form->isSubmitted() && $form->isValid() ) {
 
             // Préparation données : selon si c'est un brouillon ou pas
 
                 $idEtat = (isset($_POST['brouillon']) ? 
-                    $this->getParameter('id_etat_brouillon') : $this->getParameter('id_etat_valide'));
+                    $this->getParameter('id_etat_brouillon') : $this->getParameter('id_etat_enAttenteValidation'));
                 $idTypeAction = (isset($_POST['brouillon']) ? 
-                    $this->getParameter('id_typeAction_brouillon') : $this->getParameter('id_typeAction_ajout'));
+                    $this->getParameter('id_typeAction_enregistrerBrouillon') : $this->getParameter('id_typeAction_envoyerValidation'));
 
             // Complétion données
 
                 $acte->setFkEtat($helper->getEtatActe($idEtat));
-
-            // Upload fichier
-
-                $helper->uploaderFichier($form->get('file')->getData(),$this->getParameter('pdf_directory'),$acte->getNomPDF());
+                $acte->setNomPDF($helper->generateNomPDF($form->get('numero')->getData(),$form->get('objet')->getData()));
 
             // maj DB et disque
 
                 $manager = $this->getDoctrine()->getManager();
                 $manager->persist($acte);
                 $helper->creerAction($idTypeAction,$acte);
-                $helper->majPieceJointes($acte,$form);
+                $helper->majAnnexes($acte,$form);
                 $helper->majMotcles($acte,$form);
                 $manager->flush();
+
+            // Upload fichier
+
+                $helper->uploaderFichier($form->get('file')->getData(),$this->getParameter('pdf_directory'),$acte->getNomPDF());
 
             return $this->redirectToRoute('consultation');
 
@@ -76,9 +77,7 @@ class GestionnaireActeController extends AbstractController
 
 
     /**
-     * Affiche et traite un formulaire de modification d'un acte
-     * (même formulaire que l'ajout si ce n'est qu'on donne une instance déjà existante au lieu d'en créer une)
-     * NB : Symfony gère si l'id ne correspond à aucun acte
+     * Affiche et traite un formulaire de modification d'acte
      *
      * @Route("/acte/modification/{id}", name="gestionnaire_modification")
      */
@@ -96,7 +95,8 @@ class GestionnaireActeController extends AbstractController
         $i = 1;
         foreach ($pieceJointes as $pj) {
             $form->get('objetAnnexe'.$i)->setData($pj->getObjet());
-            $form->get('annexe'.$i)->setData(new File($this->getParameter('pdf_directory').$pj->getNomPDF()));
+            $form->get('hiddenPathAnnexe'.$i)->setData($pj->getNomPDF());
+            $form->get('hiddenSupprAnnexe'.$i)->setData("false");
             $i++;
         }
 
@@ -104,18 +104,30 @@ class GestionnaireActeController extends AbstractController
         $form->handleRequest($request);
         if ( $form->isSubmitted() && $form->isValid() ) {
 
-            // Renommage du fichier
+            // Préparation données : selon si c'est un brouillon ou pas
 
-                $helper->renommerFichier($this->getParameter('pdf_directory'),$oldNomPDF,$acte->getNomPDF());
+                $idEtat = (isset($_POST['brouillon']) ? 
+                    $this->getParameter('id_etat_brouillon') : $this->getParameter('id_etat_enAttenteValidation'));
+                $idTypeAction = (isset($_POST['brouillon']) ? 
+                    $this->getParameter('id_typeAction_reprendreBrouillon') : $this->getParameter('id_typeAction_envoyerValidation'));
             
+            // Complétion données
+
+                $acte->setFkEtat($helper->getEtatActe($idEtat));
+                $acte->setNomPDF($helper->generateNomPDF($form->get('numero')->getData(),$form->get('objet')->getData()));
+
             // maj DB et disque
 
                 $manager = $this->getDoctrine()->getManager();
                 $manager->persist($acte);
-                $helper->creerAction($this->getParameter('id_typeAction_modification'),$acte);
-                $helper->majPieceJointes($acte,$form);
+                $helper->creerAction($idTypeAction,$acte);
+                $helper->majAnnexes($acte,$form);
                 $helper->majMotcles($acte,$form);
                 $manager->flush();
+
+            // Renommage du fichier
+
+                $helper->renommerFichier($this->getParameter('pdf_directory'),$oldNomPDF,$acte->getNomPDF());
 
             return $this->redirectToRoute('consultation');
 
@@ -126,7 +138,7 @@ class GestionnaireActeController extends AbstractController
             'form' => $form->createView(),
             'creation' => false,
             'motcles' => $helper->getStringConcatenatedMotcles($acte),
-            'pieceJointeChemins' => $helper->getArrayPathPieceJointe($acte)
+            'pieceJointeChemins' => $helper->getArrayNomPDFAnnexes($acte)
         ]);
     }
 
@@ -134,6 +146,7 @@ class GestionnaireActeController extends AbstractController
 
     /**
      * Affiche une page (avec les infos de l'acte) demandant confirmation à l'utilisateur pour la suppression d'un acte.
+     * N.B: Ne crée pas d'action de suppression
      *
      * @Route("/acte/suppression/{id}", name="gestionnaire_suppression")
      */
@@ -143,10 +156,10 @@ class GestionnaireActeController extends AbstractController
         if ( isset($_POST['annul']) )
             return $this->redirectToRoute('consultation');
 
-        // Si suppression confirmée
+        // Si bouton = supprimer
         if ( isset($_POST['suppr']) ) {
 
-            // Récupèration des instances liées à $acte
+            // Récupèration des actions liées à $acte
 
                 $actionsDeActe = $this->getDoctrine()->getRepository(Action::class)->findByFkActe($acte);
 
@@ -154,26 +167,24 @@ class GestionnaireActeController extends AbstractController
 
                 foreach ($actionsDeActe as $action)
                     $action->setFkActe(null);
+            
+            // maj DB et disque
+
+                $manager = $this->getDoctrine()->getManager();
+                $helper->majAnnexes($acte);
+                $helper->majMotcles($acte);
+                $manager->remove($acte);
+                $manager->flush();
 
             // Suppression du fichier
 
                 $helper->supprimerFichier($this->getParameter('pdf_directory'),$acte->getNomPDF());
-            
-
-            // maj DB et disque
-
-                $manager = $this->getDoctrine()->getManager();
-                $manager->remove($acte);
-                $helper->creerAction($this->getParameter('id_typeAction_suppression'),null);
-                $helper->majPieceJointes($acte);
-                $helper->majMotcles($acte);
-                $manager->flush();
 
             return $this->redirectToRoute('consultation');
 
         }
 
-        // Affiche confirmation suppression
+        // Affiche la page de confirmation de suppression
         return $this->render('gestionnaire_acte/confirmation_suppression.html.twig', [
             'acte' => $acte
         ]);

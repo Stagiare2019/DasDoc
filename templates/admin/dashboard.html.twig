@@ -8,35 +8,35 @@
 
 	<h3 class="pt-3 pb-3"><u>Utilisateurs</u></h3>
 
-	{# Table listant les utilisateurs #}
-	<table class="table table-hover">
-	    <thead>
-		    <tr>
-				<th scope="col">Email</th>
-		    	<th scope="col">Role</th>
-		    	<th scope="col">Action</th>
-	    	</tr>
-	    </thead>
-	    <tbody>
-	    	{% for utilisateur in utilisateurs %}
+	{# Tableau listant les utilisateurs #}
+		<table class="table table-hover">
+		    <thead>
+			    <tr>
+					<th scope="col">Email</th>
+			    	<th scope="col">Role</th>
+			    	<th scope="col">Action</th>
+		    	</tr>
+		    </thead>
+		    <tbody>
 
-		    <tr>
-				<td>{{ utilisateur.email }}</td>
-				<td>{{ utilisateur.roles[0] }}</td>
-			    <td><a href="#">test</a></td>
-		    </tr>
-
-	    	{% endfor %}
-	    </tbody>
-    </table>
+		    	{% for utilisateur in utilisateurs %}
+				    <tr>
+						<td>{{ utilisateur.email }}</td>
+						<td>{{ utilisateur.roles[0] }}</td>
+					    <td><a href="#">faux lien</a></td>
+				    </tr>
+		    	{% endfor %}
+		    	
+		    </tbody>
+	    </table>
 
     {# Bouton pour ajouter un utilisateur #}
-	<form method="POST" action={{ path('security_register') }}>
-		<div class="text-center">
-			<input type="submit"
-			value="Ajouter un utilisateur"
-			class="btn btn-primary col-md-2">
-		</div>
-	</form>
+		<form method="POST" action={{ path('security_register') }}>
+			<div class="text-center">
+				<input type="submit"
+				value="Ajouter un utilisateur"
+				class="btn btn-primary col-md-2">
+			</div>
+		</form>
 
 {% endblock %}

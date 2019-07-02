@@ -64,21 +64,22 @@ class GestionnaireActeHelper {
         return implode(",",$acte->getMotcles()->toArray());
     }
 
-    public function getArrayPathPieceJointe(Acte $acte)
+    /* Retourne un tableau des noms des pdf des annexes d'un Acte */
+    public function getArrayNomPDFAnnexes(Acte $acte)
     {
-        $pathsPieceJointes;
+        $pathsPieceJointes = array();
         foreach ($acte->getPieceJointes()->toArray() as $pj)
             $pathsPieceJointes[] = $pj->getNomPDF();
 
         return $pathsPieceJointes;
     }
 
-    // FACTORY (avec persistence des instances crées => pas de retour)
+    // FACTORIES (avec persistence des instances crées => pas de retour)
 
     /* Crée une instance de Action et la fait persister
         NB : L'auteur de l'action crée sera toujours l'utilisateur de la session
         NB : La correspondance id-TypeAction se fait dans "services.yaml" */
-	public function creerAction(int $idTypeAction, Acte $acte = null)
+	public function creerAction(int $idTypeAction, Acte $acte)
     {
         $action = new Action();
         $action->setFkType($this->getTypeAction($idTypeAction));
@@ -90,7 +91,7 @@ class GestionnaireActeHelper {
     }
 
     /* Crée une instance de PieceJointe et la fait persister */
-    public function creerPieceJointe(Acte $acte, String $nomPDF, String $objet)
+    public function creerAnnexe(Acte $acte, String $nomPDF, String $objet)
     {
         $pj = new PieceJointe();
         $pj->setObjet($objet);
@@ -99,14 +100,64 @@ class GestionnaireActeHelper {
         $this->manager->persist($pj);
     }
 
+    // GENERATORS
+
+    /* Génère le nom du pdf d'une annexe via son numéro et son objet */
+    public function generateNomPDFAnnexe(string $numero, string $objet)
+    {
+        return $numero." - Annexe - ".$objet.".pdf";
+    }
+
+    /* Génère le nom du pdf d'un acte via son numéro et son objet */
+    public function generateNomPDF(string $numero, string $objet)
+    {
+        return $numero." - ".$objet.".pdf";
+    }
+
     // MAJ DB (enlever les liens, en remettre de nouveaux, nettoyer si besoin)
 
     /* Retire les PieceJointes liés à l'acte et ajoute éventuellement les nouvelles PieceJointes */
-    public function majPieceJointes(Acte $acte, Form $form = null)
+    public function majAnnexes(Acte $acte, Form $form = null)
     {
-        $this->supprimerPieceJointes($acte,$form);
-        if (null !== $form)
-            $this->ajouterPieceJointes($acte,$form);
+        // Crée un tableau des nomsPDF vers les annexes à supprimer et un autre tableau vers les annexes à renommer
+
+            $nomsPDFAvecObjetARenommer = array();
+            $nomsPDFASupprimer = array();
+
+            // Si suppression : toutes les annexes sont à supprimer
+            if (null === $form) {
+                $nomsPDFASupprimer = $this->getArrayNomPDFAnnexes($acte);
+            }
+            else {
+                for ($i=1; $i < 3; $i++) {
+                    if ("true" === $form->get('hiddenSupprAnnexe'.$i)->getData()) {
+                        $nomsPDFASupprimer[] = $form->get('hiddenPathAnnexe'.$i)->getData();
+                    }
+                    else if (null !== $form->get('hiddenPathAnnexe'.$i)->getData()) {
+                        $nomsPDFAvecObjetARenommer[] = ["path" => $form->get('hiddenPathAnnexe'.$i)->getData(),
+                                            "objet" => $form->get('objetAnnexe'.$i)->getData()];
+                    }
+                }
+            }
+                
+
+        // Renomme les annexes à renommer
+
+            foreach ($nomsPDFAvecObjetARenommer as $pjInfos) {
+                
+                $pj = $this->manager->getRepository(PieceJointe::class)->findOneByNomPDF($pjInfos["path"]);
+                $newName = $this->generateNomPDFAnnexe($acte->getNumero(), $pjInfos["objet"]);
+                $this->renommerFichier($this->pdfDirectory,$pjInfos['path'],$newName);
+                $pj->setNomPDF($newName);
+                $pj->setObjet($pjInfos["objet"]);
+                $this->manager->persist($pj);
+            }
+
+        // Supprime les annexes à supprimer et ajoute d'enventuelles nouvelles annexes
+
+            $this->supprimerAnnexes($nomsPDFASupprimer);
+            if (null !== $form)
+                $this->ajouterAnnexes($acte,$form);
     }
 
     /* Délie les Motcles liés à un Acte et ajoute éventuellement les nouveaux Motcle puis vérifie et enlève les motclé lié à aucun Acte */
@@ -124,15 +175,12 @@ class GestionnaireActeHelper {
 
     // RETIRER LIENS
 
-    /* Supprime les PieceJointes lié à un Acte */
-    public function supprimerPieceJointes(Acte $acte, Form $form = null)
+    /* Supprime les PieceJointes du tableau de chemins donné */
+    public function supprimerAnnexes(array $nomsPDFASupprimer)
     {
-        $pieceJointes = $acte->getPieceJointes()->toArray();
-        $i = 1;
-        foreach ($pieceJointes as $pj) {
-            if ($pj)
-            $this->manager->remove($pj);
-            $this->supprimerFichier($this->pdfDirectory,$pj->getNomPDF());
+        foreach ($nomsPDFASupprimer as $nomPDF) {
+            $this->manager->remove($this->manager->getRepository(PieceJointe::class)->findOneByNomPDF($nomPDF));
+            $this->supprimerFichier($this->pdfDirectory,$nomPDF);
         }
     }
 
@@ -151,23 +199,26 @@ class GestionnaireActeHelper {
     // CREER LIENS
 
     /* Vérifie les données du formulaire : Si annexe fournie -> ajoute une PieceJointe à la DB et upload sur le disque */
-    public function ajouterPieceJointes(Acte $acte, Form $form)
+    public function ajouterAnnexes(Acte $acte, Form $form)
     {
-        if (null !== $annexe1 = $form->get('annexe1')->getData()) {
-            $nomAnnexe1 = $acte->getNumero()." - Annexe - ".$form->get('objetAnnexe1')->getData().".pdf";
-            $this->creerPieceJointe($acte, $nomAnnexe1, $form->get('objetAnnexe1')->getData());
+        if (null !== ($annexe1 = $form->get('annexe1')->getData())) {
+            $nomAnnexe1 = $this->generateNomPDFAnnexe($acte->getNumero(), $form->get('objetAnnexe1')->getData());
+            $objetAnnexe1 = $form->get('objetAnnexe1')->getData();
+            $this->creerAnnexe($acte, $nomAnnexe1, $objetAnnexe1);
             $this->uploaderFichier($annexe1, $this->pdfDirectory, $nomAnnexe1);
         }
 
         if (null !== $annexe2 = $form->get('annexe2')->getData()) {
-            $nomAnnexe2 = $acte->getNumero()." - Annexe - ".$form->get('objetAnnexe2')->getData().".pdf";
-            $this->creerPieceJointe($acte, $nomAnnexe2, $form->get('objetAnnexe2')->getData());
+            $nomAnnexe2 = $this->generateNomPDFAnnexe($acte->getNumero(), $form->get('objetAnnexe2')->getData());
+            $objetAnnexe2 = $form->get('objetAnnexe2')->getData();
+            $this->creerAnnexe($acte, $nomAnnexe2, $objetAnnexe2);
             $this->uploaderFichier($annexe2, $this->pdfDirectory, $nomAnnexe2);
         }
             
         if (null !== $annexe3 = $form->get('annexe3')->getData()) {
-            $nomAnnexe3 = $acte->getNumero()." - Annexe - ".$form->get('objetAnnexe3')->getData().".pdf";
-            $this->creerPieceJointe($acte, $nomAnnexe3, $form->get('objetAnnexe3')->getData());
+            $nomAnnexe3 = $this->generateNomPDFAnnexe($acte->getNumero(), $form->get('objetAnnexe3')->getData());
+            $objetAnnexe3 = $form->get('objetAnnexe3')->getData();
+            $this->creerAnnexe($acte, $nomAnnexe3, $objetAnnexe3);
             $this->uploaderFichier($annexe3, $this->pdfDirectory, $nomAnnexe3);
         }
     }
