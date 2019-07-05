@@ -1,0 +1,24 @@
+{% extends "base+nav.html.twig" %}
+{# 
+    Ce template affiche une liste des enregistrements d'une entité fonctionnelle
+    (voir src/Controller/AdminController.php pour la définition d'entité fonctionnelle)
+#}
+{% block body %}
+
+	<h2 class="text-center pt-3 pb-3">Import de masse</h2>
+
+	{% if pdfPresent %}
+
+		<p>Le dossier "public/{{ import_pdf_relative_directory }}" contient un/des fichier(s) pdf(s).</p>
+		
+		<form method="post">
+			<div class="text-center">
+				<button class="btn btn-success col-md-2" type="submit" name="start">Démarrer la synchronisation</button>
+			</div>
+		</form>
+
+	{% else %}
+		<p>Le dossier "public/{{ import_pdf_relative_directory }}" ne contient pas de fichier pdf.</p>
+	{% endif %}
+
+{% endblock %}

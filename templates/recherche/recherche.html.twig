@@ -87,8 +87,12 @@
 				    {% for acte in resultats %}
 
 				    <tr>
-				    	<td><a href="{{ pdf_relative_directory ~ acte.nomPDF }}" onclick="window.open(this.href); return false;">
+				    	{% if acte.nomPDF is null %}
+							<td>{{ acte.numero }}</td>
+				    	{% else %}
+							<td><a href="{{ pdf_relative_directory ~ acte.nomPDF }}" onclick="window.open(this.href); return false;">
 				    		{{ acte.numero }}</a></td>
+				    	{% endif %}
 				    	<td>{{ acte.fkEtat }}</td>
 				    	<td>{{ acte.fkNature }}</td>
 				    	<td>{{ acte.fkMatiere }}</td>
