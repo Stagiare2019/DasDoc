@@ -1,13 +1,23 @@
 {% extends "base+nav.html.twig" %}
 
 {# 
-    Ce template affiche le formulaire d'ajout d'un acte
+    Ce template affiche le formulaire d'ajout / de modification d'un acte
 
-    Le formulaire possède des champs obligatoires et des champs optionnels.
-	N.B. : Ce formulaire sert également pour la modification d'un acte pour éviter la duplication de code
-	(il y a peu de changements entre les 2 au niveau de l'affichage
-	=> le champs "file" disparaît + les données doivent être préinitialisées)
-	Les changements sont indiqués par des balises "{% if creation %}"
+    Le formulaire possède des champs obligatoires :
+		- (Fichier -> si création)
+		- Nature
+		- Objet
+		- Matière
+		- Date de décision
+		- Numéro
+
+    Et des champs optionnels :
+    	- Annexes
+    	- Service
+    	- Date de début d'effectivité
+    	- Date de fin d'effectivité
+    	- Mot-clés
+    	- Description
 #}
 
 {% block stylesheets %}
@@ -15,10 +25,17 @@
 	{{ parent() }}
 	<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<link rel="stylesheet" type="text/css" href="/css/jquery.tagsinput-revisited.css">
+	{#
+		- jquery.tagsinput-revisited.css (tagsinput)
+		- jquery-ui.css (datepickers)
+
+		dernières versions depuis le 04/06/2019
+	#}
 
 {% endblock %}
 
 {% block body %}
+<<<<<<< HEAD
 <div class="container">
 	{% if creation %}
 	<h2 class="text-center pt-3 pb-3">Ajouter un acte</h2>
@@ -32,140 +49,160 @@
 	<h5 class="pt-2 pb-2"><u>Champs obligatoires</u></h5>
 
 		{# input file "file" #}
+=======
+
+	{# Titre du formulaire #}
+>>>>>>> 49409566183cf74951a5ea8ce73598bafdb60208
 		{% if creation %}
-		<div class="form-group row">
-		    <label class="col-form-label col-sm-2 required" for="acte_file">Fichier *</label>
-		    <div class="col-sm-4">
-		        <input type="file" id="acte_file" name="acte[file]" required="required" class="form-control-file">
-		    </div>
-		</div>
-		{% endif %}
-
-		{{ form_row(form.fkNature, {'label': "Nature de l'acte *"}) }}
-
-		{{ form_row(form.objet, {'label': "Objet *"}) }}
-
-		{{ form_row(form.fkMatiere, {'label': "Matière de l'acte *"}) }}
-
-		{# "dateDecision" #}
-		<div class="form-group row">
-			<label class="col-form-label col-sm-2 required" for="acte_dateDecision">Date de décision *</label>
-			<div class="col-sm-2">
-				<input type="text" id="acte_dateDecision" name="acte[dateDecision]" required="required" placeholder="jj/mm/aaaa" class="datepicker form-control" />
-			</div>
-	    </div>
-
-		{{ form_row(form.numero, {'label': "Numéro *"}) }}
-
-		{{ form_row(form.nomPDF, {'label': "Nom du pdf sur le disque *"}) }}
-
-	{# CHAMPS OPTIONNELS : pieceJointes, service, motcles, dateEffectiviteDebut, dateEffectiviteFin, description #}
-	<h5 class="pt-4 pb-2"><u>Champs optionnels</u></h5>
-
-		{# inputs file + textfield "annexes" #}
-		<div class="form-group row">
-		    <label class="col-form-label col-sm-2" for="acte_objetAnnexe1">Annexe 1</label>
-		    <div class="col-sm-5">
-		    	<input type="text" id="acte_objetAnnexe1" name="acte[objetAnnexe1]" class="form-control" placeholder="Veuillez compléter l'objet" value="{{ form.objetAnnexe1.vars.value }}"/>
-		    </div>
-		    <div class="col-sm-4">
-		    	{% if form.objetAnnexe1.vars.data == "" %}
-		        <input type="file" id="acte_annexe1" name="acte[annexe1]" class="form-control-file">
-		    	{% else %}
-		    	<a href="../../{{ pdf_relative_directory ~ pieceJointeChemins[0] }}" target="_blank"><img src="/img/nav/rechercher.png" alt="">voir l'annexe</a>
-		    	<a href="" onclick="supprimer(this)"><img src="/img/acte/supprimer.png" alt="">supprimer l'annexe</a>
-		    	{% endif %}
-		    </div>
-		</div>
-
-		<div class="form-group row">
-		    <label class="col-form-label col-sm-2" for="acte_objetAnnexe2">Annexe 2</label>
-		    <div class="col-sm-5">
-		    	<input type="text" id="acte_objetAnnexe2" name="acte[objetAnnexe2]" class="form-control" placeholder="Veuillez compléter l'objet" value="{{ form.objetAnnexe2.vars.value }}"/>
-		    </div>
-		    <div class="col-sm-4">
-		        {% if form.objetAnnexe2.vars.data == "" %}
-		        <input type="file" id="acte_annexe2" name="acte[annexe2]" class="form-control-file">
-		    	{% else %}
-		    	<a href="../../{{ pdf_relative_directory ~ pieceJointeChemins[1] }}" target="_blank"><img src="/img/nav/rechercher.png" alt="">voir l'annexe</a>
-		    	<a href=""><img src="/img/acte/supprimer.png" alt="">supprimer l'annexe</a>
-		    	{% endif %}
-		    </div>
-		</div>
-
-		<div class="form-group row">
-		    <label class="col-form-label col-sm-2" for="acte_objetAnnexe3">Annexe 3</label>
-		    <div class="col-sm-5">
-		    	<input type="text" id="acte_objetAnnexe3" name="acte[objetAnnexe3]" class="form-control" placeholder="Veuillez compléter l'objet" value="{{ form.objetAnnexe3.vars.value }}"/>
-		    </div>
-		    <div class="col-sm-4">
-		        {% if form.objetAnnexe3.vars.data == "" %}
-		        <input type="file" id="acte_annexe3" name="acte[annexe3]" class="form-control-file">
-		    	{% else %}
-		    	<a href="../../{{ pdf_relative_directory ~ pieceJointeChemins[2] }}" target="_blank"><img src="/img/nav/rechercher.png" alt="">voir l'annexe</a>
-		    	<a href=""><img src="/img/acte/supprimer.png" alt="">supprimer l'annexe</a>
-		    	{% endif %}
-		    </div>
-		</div>
-
-		{{ form_row(form.fkService, {'label': "Service"}) }}
-
-		{# "motcles" + "dateEffectiviteDebut" + "dateEffectiviteFin" #}
-		<div class="form-group row">
-			<label class="col-form-label col-sm-2" for="acte_motcles">Mot-clés</label>
-			<div class="col-sm-10">
-				<input name="acte[motcles]" id="tags" class="tagsinput">
-	    	</div>
-	    </div>
-
-		<div class="form-group row">
-			<label class="col-form-label col-sm-2" for="acte_dateEffectiviteDebut">Date de début d'effectivité</label>
-			<div class="col-sm-2">
-				<input type="text" id="acte_dateEffectiviteDebut" name="acte[dateEffectiviteDebut]" placeholder="jj/mm/aaaa" class="datepicker form-control" />
-			</div>
-		</div>
-
-		<div class="form-group row">
-			<label class="col-form-label col-sm-2" for="acte_dateEffectiviteFin">Date de fin d'effectivité</label>
-			<div class="col-sm-2">
-				<input type="text" id="acte_dateEffectiviteFin" name="acte[dateEffectiviteFin]" placeholder="jj/mm/aaaa" class="datepicker form-control" />
-			</div>
-		</div>
-
-		{{ form_row(form.description, {'label': "Description"}) }}
-
-	{# Boutons de submit #}
-	<div class="text-center">
-
-		{% if creation %}
-
-		<button class="btn btn-success btn-lg col-md-3 ml-2 mr-2" type="submit" name="brouillon">Enregistrer comme brouillon</button>
-		<button class="btn btn-success btn-lg col-md-3 ml-2 mr-2" type="submit">Ajouter Acte</button>
-
+			<h2 class="text-center pt-3 pb-3">Ajouter un acte</h2>
 		{% else %}
-
-		<button class="btn btn-success btn-lg col-md-3" type="submit">Modifier Acte</button>
-
+			<h2 class="text-center pt-3 pb-3">Modifier un acte</h2>
 		{% endif %}
 
-	</div>
-	
-	{# Permet à Symfony de savoir qu'on s'est occupé nous-même de l'affichage de certains champs #}
-	{% if creation %}
-		{% do form.file.setRendered %}
-	{% endif %}
-	{% do form.annexe1.setRendered %}
-	{% do form.objetAnnexe1.setRendered %}
-	{% do form.annexe2.setRendered %}
-	{% do form.objetAnnexe2.setRendered %}
-	{% do form.annexe3.setRendered %}
-	{% do form.objetAnnexe3.setRendered %}
-	{% do form.dateDecision.setRendered %}
-	{% do form.motcles.setRendered %}
-	{% do form.dateEffectiviteDebut.setRendered %}
-	{% do form.dateEffectiviteFin.setRendered %}
+	{# Formulaire #}
 
-	{{ form_end(form) }}
+		{{ form_start(form) }}
+
+		{# Champs obligatoires #}
+
+			<h5 class="pt-2 pb-2"><u>Champs obligatoires</u></h5>
+
+			{# "file" (le fichier de l'acte) #}
+				{% if creation %}
+					<div class="form-group row">
+					    <label class="col-form-label col-sm-2 required" for="acte_file">Fichier *</label>
+					    <div class="col-sm-4">
+					        <input type="file" id="acte_file" name="acte[file]" required="required" class="form-control-file">
+					    </div>
+					</div>
+				{% endif %}
+
+			{{ form_row(form.fkNature, {'label': "Nature de l'acte *"}) }}
+
+			{{ form_row(form.objet, {'label': "Objet *"}) }}
+
+			{{ form_row(form.fkMatiere, {'label': "Matière de l'acte *"}) }}
+
+			{# "dateDecision" #}
+				<div class="form-group row">
+					<label class="col-form-label col-sm-2 required" for="acte_dateDecision">Date de décision *</label>
+					<div class="col-sm-2">
+						<input type="text" id="acte_dateDecision" name="acte[dateDecision]" required="required" placeholder="jj/mm/aaaa" class="datepicker form-control" />
+					</div>
+			    </div>
+
+			{{ form_row(form.numero, {'label': "Numéro *"}) }}
+
+		{# Champs optionnels #}
+
+			<h5 class="pt-4 pb-2"><u>Champs optionnels</u></h5>
+
+			{# "annexes" (au nombre de 3 en plusieurs champs dont certain sont cachés à l'utilisateur) #}
+
+				{# Annexe 1 #}
+					<div class="form-group row">
+					    <label class="col-form-label col-sm-2" for="acte_objetAnnexe1">Annexe 1</label>
+					    <div class="col-sm-5">
+					    	<input type="text" id="acte_objetAnnexe1" name="acte[objetAnnexe1]" class="form-control" placeholder="Veuillez compléter l'objet" value="{{ form.objetAnnexe1.vars.value }}"/>
+					    </div>
+					    <div id="annexe1_dynamic_div" class="col-sm-4">
+					    	{% if form.hiddenPathAnnexe1.vars.data == "" %}
+					        <input type="file" id="acte_annexe1" name="acte[annexe1]" class="form-control-file">
+					    	{% else %}
+					    	<a id="annexe1_LienVoir" href="../../{{ pdf_relative_directory ~ pieceJointeChemins[0] }}" target="_blank"><img src="/img/nav/rechercher.png" alt="">voir l'annexe</a>
+					    	<a id="annexe1_LienSuppr" href="" onclick="return supprimer(1)"><img src="/img/acte/supprimer.png" alt="">supprimer l'annexe</a>
+					    	{% endif %}
+					    </div>
+					</div>
+
+				{# Annexe 2 #}
+					<div class="form-group row">
+					    <label class="col-form-label col-sm-2" for="acte_objetAnnexe2">Annexe 2</label>
+					    <div class="col-sm-5">
+					    	<input type="text" id="acte_objetAnnexe2" name="acte[objetAnnexe2]" class="form-control" placeholder="Veuillez compléter l'objet" value="{{ form.objetAnnexe2.vars.value }}"/>
+					    </div>
+					    <div id="annexe2_dynamic_div" class="col-sm-4">
+					        {% if form.hiddenPathAnnexe2.vars.data == "" %}
+					        <input type="file" id="acte_annexe2" name="acte[annexe2]" class="form-control-file">
+					    	{% else %}
+					    	<a id="annexe2_LienVoir" href="../../{{ pdf_relative_directory ~ pieceJointeChemins[1] }}" target="_blank"><img src="/img/nav/rechercher.png" alt="">voir l'annexe</a>
+					    	<a id="annexe2_LienSuppr" href="" onclick="supprimer(2)"><img src="/img/acte/supprimer.png" alt="">supprimer l'annexe</a>
+					    	{% endif %}
+					    </div>
+					</div>
+
+				{# Annexe 3 #}
+					<div class="form-group row">
+					    <label class="col-form-label col-sm-2" for="acte_objetAnnexe3">Annexe 3</label>
+					    <div class="col-sm-5">
+					    	<input type="text" id="acte_objetAnnexe3" name="acte[objetAnnexe3]" class="form-control" placeholder="Veuillez compléter l'objet" value="{{ form.objetAnnexe3.vars.value }}"/>
+					    </div>
+					    <div id="annexe2_dynamic_div" class="col-sm-4">
+					        {% if form.hiddenPathAnnexe3.vars.data == "" %}
+					        <input type="file" id="acte_annexe3" name="acte[annexe3]" class="form-control-file">
+					    	{% else %}
+					    	<a id="annexe3_LienVoir" href="../../{{ pdf_relative_directory ~ pieceJointeChemins[2] }}" target="_blank"><img src="/img/nav/rechercher.png" alt="">voir l'annexe</a>
+					    	<a id="annexe3_LienSuppr" href="" onclick="supprimer(3)"><img src="/img/acte/supprimer.png" alt="">supprimer l'annexe</a>
+					    	{% endif %}
+					    </div>
+					</div>
+
+			{{ form_row(form.fkService, {'label': "Service"}) }}
+
+			{# "motcles" #}
+				<div class="form-group row">
+					<label class="col-form-label col-sm-2" for="acte_motcles">Mot-clés</label>
+					<div class="col-sm-10">
+						<input name="acte[motcles]" id="tags" class="tagsinput">
+			    	</div>
+			    </div>
+
+			{# "dateEffectiviteDebut" #}
+				<div class="form-group row">
+					<label class="col-form-label col-sm-2" for="acte_dateEffectiviteDebut">Date de début d'effectivité</label>
+					<div class="col-sm-2">
+						<input type="text" id="acte_dateEffectiviteDebut" name="acte[dateEffectiviteDebut]" placeholder="jj/mm/aaaa" class="datepicker form-control" />
+					</div>
+				</div>
+
+			{# "dateEffectiviteFin" #}
+				<div class="form-group row">
+					<label class="col-form-label col-sm-2" for="acte_dateEffectiviteFin">Date de fin d'effectivité</label>
+					<div class="col-sm-2">
+						<input type="text" id="acte_dateEffectiviteFin" name="acte[dateEffectiviteFin]" placeholder="jj/mm/aaaa" class="datepicker form-control" />
+					</div>
+				</div>
+
+			{{ form_row(form.description, {'label': "Description"}) }}
+
+		{# Boutons de submit #}
+			<div class="text-center">
+
+				<button class="btn btn-success btn-lg col-md-3 ml-2 mr-2" type="submit" name="brouillon">
+					Enregistrer comme brouillon
+				</button>
+				<button class="btn btn-success btn-lg col-md-3 ml-2 mr-2" type="submit">
+					Envoyer en validation
+				</button>
+
+			</div>
+		
+		{# Permet à Symfony de savoir qu'on s'est occupé nous-même de l'affichage de certains champs #}
+		{% if creation %}
+			{% do form.file.setRendered %}
+		{% endif %}
+		{% do form.annexe1.setRendered %}
+		{% do form.objetAnnexe1.setRendered %}
+		{% do form.annexe2.setRendered %}
+		{% do form.objetAnnexe2.setRendered %}
+		{% do form.annexe3.setRendered %}
+		{% do form.objetAnnexe3.setRendered %}
+		{% do form.dateDecision.setRendered %}
+		{% do form.motcles.setRendered %}
+		{% do form.dateEffectiviteDebut.setRendered %}
+		{% do form.dateEffectiviteFin.setRendered %}
+
+		{{ form_end(form) }}
 
 {% endblock %}
 
@@ -196,10 +233,41 @@
   	{% endif %}
 
   	<script>
-  		function supprimer(this) {
-  			this.value = "";
-  			alert(this);
-  		}	
+  		function addElement(parentId, elementTag, elementId, elementName, elementType, html) {
+	        // Adds an element to the document
+	        var p = document.getElementById(parentId);
+	        var newElement = document.createElement(elementTag);
+	        newElement.setAttribute('id', elementId);
+	        newElement.setAttribute('type', elementType);
+	        newElement.setAttribute('name', elementName);
+	        newElement.innerHTML = html;
+	        p.appendChild(newElement);
+	    }
+	    function removeElement(elementId) {
+	        // Removes an element from the document
+	        var element = document.getElementById(elementId);
+	        element.parentNode.removeChild(element);
+	    }
+	    /*var fileId = 0; // used by the addFile() function to keep track of IDs
+	    function addFile() {
+	        fileId++; // increment fileId to get a unique ID for the new element
+	        var html = '<input type="file" name="uploaded_files[]" /> ' +
+	                   '<a href="" onclick="javascript:removeElement('file-' + fileId + ''); return false;">Remove</a>';
+	        addElement('files', 'p', 'file-' + fileId, html);
+	    }*/
+  		function supprimer(numeroAnnexe) {
+
+  			document.getElementById('acte_objetAnnexe'+numeroAnnexe).value = "";
+
+  			removeElement('annexe'+numeroAnnexe+'_LienVoir');
+  			removeElement('annexe'+numeroAnnexe+'_LienSuppr');
+
+  			addElement('annexe'+numeroAnnexe+'_dynamic_div',"input",'acte_annexe'+numeroAnnexe,'acte[annexe'+numeroAnnexe+']',"file",null);
+
+  			document.getElementById('acte_hiddenSupprAnnexe'+numeroAnnexe).value = "true";
+
+  			return false;
+  		}
   	</script>
 </div>
 {% endblock %}

@@ -11,15 +11,8 @@
 
     {{ form_start(form) }}
 
-    {# 'full_name' est nécessaire car par défault l'attribut "full_name" prend la valeur "form['email']"
-    => l'authenticator ne comprend pas cette valeur donc on la remplace par "email" 
-
-    L'authenticator (voir src/Security/LoginFormAuthenticator) est un fichier php utilisé par
-    le composant symfony "Security" qui gére tout seul la connexion et la déconnexion.
-
-    #}
+    {# 'full_name' est nécessaire pour l'authenticator (voir en bas) #}
     {{ form_row(form.email, {'full_name': 'email', 'label': "Email"}) }}
-
     {{ form_row(form.password, {'full_name': 'password', 'label': "Mot de passe"}) }}
     
     {# csrf token #}
@@ -39,3 +32,10 @@
     {{ form_end(form) }}
 </div>
 {% endblock %}
+
+{#
+
+    L'authenticator est un fichier php (voir src/Security/LoginFormAuthenticator.php) utilisé par
+    le composant symfony "Security" qui gére la connexion et la déconnexion.
+
+#}

@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -51,7 +52,6 @@ class ActeType extends AbstractType
                 'html5' => false
             ])
             ->add('numero', TextType::class)
-            ->add('nomPDF', TextType::class)
 
             // CHAMPS OPTIONNELS
             
@@ -63,6 +63,14 @@ class ActeType extends AbstractType
                 'mapped' => false,
                 'required' => false
             ])
+            ->add('hiddenPathAnnexe1', HiddenType::class, [
+                'mapped' => false,
+                'required' => false
+            ])
+            ->add('hiddenSupprAnnexe1', HiddenType::class, [
+                'mapped' => false,
+                'required' => false
+            ])
             ->add('annexe2', FileType::class, [
                 'mapped' => false,
                 'required' => false
@@ -71,11 +79,27 @@ class ActeType extends AbstractType
                 'mapped' => false,
                 'required' => false
             ])
+            ->add('hiddenPathAnnexe2', HiddenType::class, [
+                'mapped' => false,
+                'required' => false
+            ])
+            ->add('hiddenSupprAnnexe2', HiddenType::class, [
+                'mapped' => false,
+                'required' => false
+            ])
             ->add('annexe3', FileType::class, [
                 'mapped' => false,
                 'required' => false
             ])
             ->add('objetAnnexe3', TextType::class, [
+                'mapped' => false,
+                'required' => false
+            ])
+            ->add('hiddenPathAnnexe3', HiddenType::class, [
+                'mapped' => false,
+                'required' => false
+            ])
+            ->add('hiddenSupprAnnexe3', HiddenType::class, [
                 'mapped' => false,
                 'required' => false
             ])

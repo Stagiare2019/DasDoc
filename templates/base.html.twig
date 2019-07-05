@@ -3,17 +3,15 @@
 Ce template est la base HTML de toutes les pages retournées par la plateforme.
 
 N.B. :
-La sécurité est gérée par le composant Symfony "security"
-appelé avant cette base donc j'ai peu de contrôle dessus,
-mais je pense qu'il est efficace pour tout ce qui est sécurité de base.
+La sécurité est gérée par le composant Symfony "security".
+Il est appelé avant cette base donc j'ai peu de contrôle sur la sécurité,
+mais je fais confiance à ce module pour tout ce qui est sécurité de base.
 
-Les balise "{ ... }" sont des balises Twig (voir "public/documentation/twig/les_bases.txt").
-
-Il y a 4 blocks qui peuvent être remplis par des templates "enfant" (ces templates adaptent le contenu selon la requête) :
- - "stylesheets" : contient les liens css nécessaires aux éléments du body (contient de base le thème css général).
- - "nav" : contient le navigateur, par défault ce template n'en a pas (voir "templates/base+nav.html.twig").
+Il y a 4 blocks qui peuvent être remplis par des templates "enfant" (pour adapter le contenu selon la requête) :
+ - "stylesheets" : contient les liens css nécessaires aux éléments du body (contient de base le thème css général "flatly").
+ - "nav" : contient le navigateur, ce template n'en a pas (voir "templates/base+nav.html.twig").
  - "body" : contient le corps de la page.
- - "scripts" : contient les scripts JavaScripts nécessaires aux éléments du body.
+ - "scripts" : contient les scripts nécessaires aux éléments du body.
 
 #}
 <!DOCTYPE html>

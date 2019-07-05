@@ -1,6 +1,7 @@
 {% extends "base+nav.html.twig" %}
 {# 
-    Ce template affiche une liste des utilisateurs et des groupes ainsi que des fonctions pour les gérer.
+    Ce template affiche une liste des enregistrements d'une entité fonctionnelle
+    (voir src/Controller/AdminController.php pour la définition d'entité fonctionnelle)
 #}
 {% block body %}
 
@@ -8,42 +9,41 @@
 
 	<h3 class="pt-3 pb-3"><u>{{ app.request.get('entity') }}</u></h3>
 
-	{# Table listant les entites #}
-	<table class="table table-hover">
-	    <thead>
-		    <tr>
-				<th scope="col">Libelle</th>
-		    	<th scope="col">Action</th>
-	    	</tr>
-	    </thead>
-	    <tbody>
-	    	{% for entite in entites %}
+	{# Tableau listant les enregistrements #}
+		<table class="table table-hover">
+		    <thead>
+			    <tr>
+					<th scope="col">Libelle</th>
+			    	<th scope="col">Action</th>
+		    	</tr>
+		    </thead>
+		    <tbody>
 
-		    <tr>
-				<td>{{ entite.libelle }}</td>
-			    <td><a href={{ path('admin_renommer', {'entity': app.request.get('entity'), 'id': entite.id}) }}>renommer</a></td>
-		    </tr>
+		    	{% for entite in entites %}
+				    <tr>
+						<td>{{ entite.libelle }}</td>
+					    <td><a href={{ path('admin_renommer', {'entity': app.request.get('entity'), 'id': entite.id}) }}>renommer</a></td>
+				    </tr>
+		    	{% endfor %}
 
-	    	{% endfor %}
-	    </tbody>
-    </table>
+		    </tbody>
+	    </table>
 
 	{# Message de prévention #}
-	<div class="alert alert-danger">
-  		<strong>Attention ! </strong>Supprimer une entité peut altérer le bon fonctionnement de la plateforme 
-  		(voir <a href="#">DocumentationDasDoc/enums</a>).
-  		Si vous êtes sûrs de ce que vous faîtes, pensez également à supprimer en amont les entités qui lui sont liés 
-  		(voir <a href="#">DocumentationDasDoc/MLD</a>).
-	</div>
+		<div class="alert alert-danger">
+	  		<strong>Attention ! </strong>Supprimer un enregistrement d'une entité fonctionnelle peut altérer le bon fonctionnement de la plateforme.</br>
+	  		Si vous êtes sûrs de ce que vous faîtes, pensez également à supprimer en amont les entités qui lui sont liés 
+	  		(voir le MLD de DasDoc pour plus de compréhension).
+		</div>
 
 	{# Bouton pour ajouter une entité #}
-	<form method="POST" action={{ path('admin_ajouter', {'entity': app.request.get('entity')}) }}>
-		<div class="text-center">
-			<input type="submit"
-			name="Ok"
-			value="Ajouter une entité : {{ app.request.get('entity') }}"
-			class="btn btn-primary col-md-3">
-		</div>
-	</form>
+		<form method="POST" action={{ path('admin_ajouter', {'entity': app.request.get('entity')}) }}>
+			<div class="text-center">
+				<input type="submit"
+				name="Ok"
+				value="Ajouter une entité : {{ app.request.get('entity') }}"
+				class="btn btn-primary col-md-3">
+			</div>
+		</form>
 
 {% endblock %}

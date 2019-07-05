@@ -67,15 +67,24 @@ class AdminHelper {
             // Etats d'acte
             "EtatActe" => array(
                 "Brouillon",
-                "Valide"
+                "En attente de validation",
+                "Validé",
+                "Refusé",
+                "Transmis",
+                "Annulé",
+                "Archivé"
             ),
 
             // Types d'action
             "TypeAction" => array(
-                "Brouillon",
-                "Ajout",
-                "Suppression",
-                "Modification"
+                "Enregistrer comme brouillon",
+                "Reprendre un brouillon",
+                "Envoyer en validation",
+                "Valider",
+                "Refuser",
+                "Transmettre",
+                "Annuler",
+                "Archiver",
             ),
 
             // Natures d'acte
@@ -101,8 +110,50 @@ class AdminHelper {
 
             // Services
             "Service" => array(
+                "Achats marchés - Commande publique",
+                "Action sociale - Séniors - Santé",
+                "Archives - Documentation",
+                "Bâtiments",
+                "Bâtiments - Centre Technique Municipal",
+                "Cabinet du maire",
+                "Cadre de vie",
+                "Comité des Oeuvres Sociales",
+                "Comptabilité - Finances",
+                "Conservatoire Georges-Gershwin",
+                "Crèche familiale du Calin-Calinou",
+                "Culturel",
+                "Direction de la Communication",
+                "Direction des Services Techniques",
+                "Direction Générale des Services",
+                "Enfance (secteur)",
+                "Enfance - Scolarité",
+                "Espace Informations Retraités",
+                "Espace médical Joseph-Boullanger",
+                "Etat-civil - Elections",
+                "Evènementiel",
+                "Foyer du Clos de Rome",
+                "Foyer Les Pincerais",
+                "Garage- Transports",
+                "Guichet Unique",
+                "Halte-garderie Tapis-vole",
+                "Jeunesse - Sports - Vie associative",
+                "Juridique",
+                "Magasin Municipal",
+                "Médiathèque Blaise-Cendrars",
+                "Multi-accueil Arlequin",
+                "Multi-accueil Neson Mandela",
+                "Multi-accueil Nougatine",
+                "Multi-accueil Tournycoti",
+                "Musée de la Batellerie et des voies navigables",
+                "Petite enfance",
+                "Police Municipale",
+                "Relais d'Assistantes Maternelles",
+                "Ressources Humaines",
+                "Scolarité - Restauration - Entretion bâtiments (secteur)",
+                "Systèmes d'Information",
+                "Théâtre Simone-Signoret",
                 "Urbanisme",
-                "Ressources humaines"
+                "Vie économique - commerce - fluvial"
             ),
             
             // Matières

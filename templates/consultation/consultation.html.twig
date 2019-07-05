@@ -1,12 +1,13 @@
 {% extends "base+nav.html.twig" %}
 {# 
-    Ce template affiche des actes en lien avec l'utilisateur (brouillons)
+    Ce template affiche les actes en lien avec l'utilisateur (brouillons apr ex)
     et l'historique des 10 dernières actions de l'utilisateur.
 
     N.B. : Les actions ne sont pas supprimés si l'acte qu'elle réfère est supprimé
     (Ceci explique le {% if action.fkActe is not null %}).
 #}
 {% block body %}
+<<<<<<< HEAD
 <div class="container-fluid">
     <h2 class="text-center pt-3 pb-3">Tableau de bord</h2>
     <div class="row mt-5">
@@ -435,3 +436,76 @@
 
 {% endblock %}
 
+=======
+	
+	<h2 class="text-center pt-3 pb-3">Tableau de bord</h2>
+
+	{# Module : "Brouillons" #}
+		<h4>Brouillons</h4>
+
+		<table id="brouillons" class="table table-bordered table-striped table-hover">
+		    <thead>
+			    <tr>
+			      	<th class="th-sm">Numéro</th>
+					<th class="th-sm">Nature</th>
+			      	<th class="th-sm">Matière</th>
+			      	<th class="th-sm">Objet</th>
+			      	<th class="th-sm">Actions</th>
+			    </tr>
+			</thead>
+			<tbody>
+
+			    {% for acte in brouillons %}
+				    <tr>
+				    	<td><a href="{{ pdf_relative_directory ~ acte.nomPDF }}" target="_blank">
+				    		{{ acte.numero }}</a></td>
+				    	<td>{{ acte.fkNature }}</td>
+				    	<td>{{ acte.fkMatiere }}</td>
+						<td>{{ acte.objet }}</td>
+						<td> {# 2 pictos séparés par un "/" #}
+						    <a href={{ path('gestionnaire_suppression', {'id': acte.id}) }}>
+						    	<img src="/img/acte/supprimer.png" alt="supprimer">
+						    </a>
+						    /
+						    <a href={{ path('gestionnaire_modification', {'id': acte.id}) }}>
+						    	<img src="/img/acte/editer.png" alt="modifier">
+						    </a>
+						</td>
+				    </tr>
+		    	{% endfor %}
+
+			</tbody>
+		</table>
+
+	{# Module : "Historique des actions" #}
+		<h4>Historique des actions</h4>
+
+		<table class="table table-bordered table-striped table-hover">
+		    <thead>
+			    <tr>
+			    	<th scope="col">Action</th>
+			    	<th scope="col">Date</th>
+			    	<th scope="col">Numero</th>
+			    	<th scope="col">Objet de l'acte</th>
+		    	</tr>
+		    </thead>
+		    <tbody>
+
+		    	{% for action in historique %}
+				    <tr>
+				    	<td>{{ action.fkType }}</a></td>
+				    	<td>{{ action.date|date('d/m/Y') }}</a></td>
+
+				    	{% if action.fkActe is not null %}
+						    <td><a href="{{ pdf_relative_directory ~ action.fkActe.nomPDF }}" target="_blank">{{ action.fkActe.numero }}</a></td>
+						    <td>{{ action.fkActe.objet }}</td>
+				    	{% endif %}
+
+				    </tr>
+		    	{% endfor %}
+
+		    </tbody>
+	    </table>
+
+{% endblock %}
+>>>>>>> 49409566183cf74951a5ea8ce73598bafdb60208

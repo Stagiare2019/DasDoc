@@ -1,33 +1,33 @@
 {% extends "base+nav.html.twig" %}
 {# 
     Ce template affiche une page de confirmation pour la suppression d'un acte
-    (qui est un acte important étant donné qu'il supprime le pdf sur le disque)
+    (qui est une action importante étant donné qu'elle supprime le pdf (possiblement unique) sur le disque)
 #}
 {% block body %}
 <div class="container">
 	<h2 class="text-center pt-3 pb-3">Confirmation</h2>
 
 	{# Le paragraphe de confirmation #}
-	<p>Êtes-vous sûr de vouloir supprimer cet acte ? Vous pouvez le modifier si des informations sont éronées. 
-		<a style="text-decoration: none;" href={{ path('gestionnaire_modification', {'id': acte.id}) }}>
-			modifier <img src="/img/acte/editer.png" alt="">
-		</a>
-	</p>
+		<p>Êtes-vous sûr de vouloir supprimer cet acte ? Vous pouvez le modifier si des informations sont éronées. 
+			<a style="text-decoration: none;" href={{ path('gestionnaire_modification', {'id': acte.id}) }}>
+				modifier <img src="/img/acte/editer.png" alt="modifier">
+			</a>
+		</p>
     
     {# Une table d'une ligne nous donnant les informations de l'acte #}
-	<table class="table">
-		<tbody>
-		    <tr>
-		    	<td><a href="{{ pdf_relative_directory ~ acte.nomPDF }}">{{ acte.numero }}</a></td>
-		    	<td>{{ acte.fkEtat }}</td>
-				<td>{{ acte.fkNature }}</td>
-				<td>{{ acte.fkMatiere }}</td>
-				<td>{{ acte.objet }}</td>
-		   	</tr>
-	    </tbody>
-	</table>
+		<table class="table">
+			<tbody>
+			    <tr>
+			    	<td><a href="{{ pdf_relative_directory ~ acte.nomPDF }}">{{ acte.numero }}</a></td>
+					<td>{{ acte.fkNature }}</td>
+					<td>{{ acte.fkMatiere }}</td>
+					<td>{{ acte.objet }}</td>
+			   	</tr>
+		    </tbody>
+		</table>
 
 	{# boutons "supprimer" et "annuler" #}
+<<<<<<< HEAD
 	<form method="post">
 		<div class="text-center">
 			<button type="submit" class="btn btn-danger col-md-2 ml-2 mr-2" name="suppr">Supprimer</button>
@@ -35,4 +35,13 @@
 		</div>
 	</form>
 </div>
+=======
+		<form method="post">
+			<div class="text-center">
+				<button type="submit" class="btn btn-danger col-md-2 ml-2 mr-2" name="suppr">Supprimer</button>
+				<button type="submit" class="btn btn-primary col-md-2 ml-2 mr-2" name="annul">Annuler</button>
+			</div>
+		</form>
+
+>>>>>>> 49409566183cf74951a5ea8ce73598bafdb60208
 {% endblock %}
