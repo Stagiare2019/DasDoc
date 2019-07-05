@@ -31,6 +31,8 @@ Il y a 4 blocks qui peuvent être remplis par des templates "enfant" (ces templa
 
             {# thème css : flatly #}
             <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+             <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+            <link rel="stylesheet" type="text/css" href="/css/style.css">
             {#
                 téléchargé en local.
                 lien de téléchargement : "https://bootswatch.com/4/flatly/bootstrap.min.css".
@@ -48,12 +50,12 @@ Il y a 4 blocks qui peuvent être remplis par des templates "enfant" (ces templa
     </header>
     <body ng-controller="MainCtrl">
 
-        <div class="container">
+        
 
             {% block body %}
             {% endblock %}
 
-        </div>
+       
 
         {% block scripts %}
         {% endblock %}

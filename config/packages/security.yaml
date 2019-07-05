@@ -2,7 +2,8 @@ security:
     encoders:
         App\Entity\Utilisateur:
             algorithm: argon2i
-
+    role_hierarchy:
+        
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         # used to reload user from session & other features (e.g. switch_user)
