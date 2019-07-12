@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Utilisateur;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -23,10 +24,24 @@ class UtilisateurType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-        ->add('email')
-        ->add('password', PasswordType::class)
-        ->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+      
+      
+               $builder->add('roles',ChoiceType::class,[
+                    'choices'=> [
+                        "Agent"=>"ROLE_AGENT",
+                        "Valideur"=>"ROLE_VALIDEUR",
+                        "Transmetteur"=>"ROLE_TRANSMETTEUR",
+                        "Admin"=>"ROLE_ADMIN",
+                        "Superadmin"=>"ROLE_SUPERADMIN"
+                    ],
+                    'multiple'=>true,
+                    'expanded'=>true,
+                    'mapped'=>true,
+                    'translation_domain'=>'messages'
+                ]);
+         $builder->add('email')
+                ->add('password', PasswordType::class)
+                ->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
 
             if ($this->requestStack->getCurrentRequest()->attributes->get('_route') === 'security_register')
                 $event->getForm()->add('confirm_password', PasswordType::class);

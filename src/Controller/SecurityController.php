@@ -12,6 +12,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /*
 
@@ -20,15 +24,29 @@ Ce controleur est en charge de l'accès à la plateforme (sécurisée par des ut
 */
 class SecurityController extends AbstractController
 {
+    private $requestStack;
+    public function __construct(RequestStack $requestStack)
+    {
+        $this->requestStack = $requestStack;
+    } 
     /**
      * Affiche et traite un formulaire de login
      *
-     * @Route("/login", name="security_login")
+     * @Route("/", name="security_login")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
+        $user=new Utilisateur();
         // Création d'un formulaire vide non-lié à une instance
-        $form = $this->createForm(UtilisateurType::class);
+        $form = $this->createFormBuilder($user)
+                    ->add('email')
+                    ->add('password', PasswordType::class)
+                    ->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+
+                        if ($this->requestStack->getCurrentRequest()->attributes->get('_route') === 'security_register')
+                            $event->getForm()->add('confirm_password', PasswordType::class);})
+                    ->getForm();
+            
 
         // Affichage du formulaire
         return $this->render('security/login.html.twig', [

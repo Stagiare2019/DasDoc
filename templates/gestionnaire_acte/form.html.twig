@@ -35,24 +35,8 @@
 {% endblock %}
 
 {% block body %}
-<<<<<<< HEAD
 <div class="container">
-	{% if creation %}
-	<h2 class="text-center pt-3 pb-3">Ajouter un acte</h2>
-	{% else %}
-	<h2 class="text-center pt-3 pb-3">Modifier un acte</h2>
-	{% endif %}
-
-	{{ form_start(form) }}
-
-	{# CHAMPS OBLIGATOIRES : (fichier à uploader -> si creation) + nature + objet + matière + dateDécision + numero + nomPDF #}
-	<h5 class="pt-2 pb-2"><u>Champs obligatoires</u></h5>
-
-		{# input file "file" #}
-=======
-
 	{# Titre du formulaire #}
->>>>>>> 49409566183cf74951a5ea8ce73598bafdb60208
 		{% if creation %}
 			<h2 class="text-center pt-3 pb-3">Ajouter un acte</h2>
 		{% else %}
@@ -203,7 +187,7 @@
 		{% do form.dateEffectiviteFin.setRendered %}
 
 		{{ form_end(form) }}
-
+</div>
 {% endblock %}
 
 {% block scripts %}

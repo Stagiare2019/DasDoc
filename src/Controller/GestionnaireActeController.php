@@ -143,7 +143,110 @@ class GestionnaireActeController extends AbstractController
     }
 
 
+    /**
+     * traite la validation d'un acte
+     * @Route("/acte/validation/{id}", name="gestionnaire_validation")
+     */
+    public function validation( Acte $acte,GestionnaireActeHelper $helper)
+    {
+        
+            $idEtat=$this->getParameter('id_etat_valide');
+            $acte->setFkEtat($helper->getEtatActe($idEtat));
+            $idTypeAction= $this->getParameter('id_typeAction_valider');
+            $helper->creerAction($idTypeAction,$acte);
+            // m à j de la BDD
+            $manager = $this->getDoctrine()->getManager();
+            $manager->persist($acte);
+            $manager->flush();
+            return $this->redirectToRoute('consultation');
+                  
+        
+    }
 
+      /**
+       * traite le refus d'un acte envoyé en validation
+     * @Route("/acte/refuse/{id}", name="gestionnaire_refus")
+     */
+    public function refus( Acte $acte,GestionnaireActeHelper $helper)
+    {
+        
+            $idEtat=$this->getParameter('id_etat_refuse');
+            $acte->setFkEtat($helper->getEtatActe($idEtat));
+            $idTypeAction= $this->getParameter('id_typeAction_refuser');
+            $helper->creerAction($idTypeAction,$acte);
+            
+            // m à j de la BDD
+            $manager = $this->getDoctrine()->getManager();
+            $manager->persist($acte);
+            $manager->flush();
+            return $this->redirectToRoute('consultation');
+                  
+        
+    }
+
+
+      /**
+     * traite la transmission d'un acte
+     * @Route("/acte/transmission/{id}", name="gestionnaire_transmission")
+     */
+    public function transmission( Acte $acte,GestionnaireActeHelper $helper)
+    {
+        
+            $idEtat=$this->getParameter('id_etat_transmis');
+            $acte->setFkEtat($helper->getEtatActe($idEtat));
+            $idTypeAction= $this->getParameter('id_typeAction_transmettre');
+            $helper->creerAction($idTypeAction,$acte);
+            // m à j de la BDD
+            $manager = $this->getDoctrine()->getManager();
+            $manager->persist($acte);
+            $manager->flush();
+            return $this->redirectToRoute('consultation');
+                  
+        
+    }
+
+     /**
+     * Annule un acte validé
+     * @Route("/acte/annulation/{id}", name="gestionnaire_annulation")
+     */
+    public function annulation( Acte $acte,GestionnaireActeHelper $helper)
+    {
+        
+            $idEtat=$this->getParameter('id_etat_annule');
+            $acte->setFkEtat($helper->getEtatActe($idEtat));
+            $idTypeAction= $this->getParameter('id_typeAction_annuler');
+            $helper->creerAction($idTypeAction,$acte);
+            // m à j de la BDD
+            $manager = $this->getDoctrine()->getManager();
+            $manager->persist($acte);
+            $manager->flush();
+            return $this->redirectToRoute('consultation');
+                  
+        
+    }
+
+    /**
+     * Archive un acte
+     * @Route("/acte/archive/{id}", name="gestionnaire_archive")
+     */
+    public function archive( Acte $acte,GestionnaireActeHelper $helper)
+    {
+        
+            $idEtat=$this->getParameter('id_etat_archive');
+            $acte->setFkEtat($helper->getEtatActe($idEtat));
+            $idTypeAction= $this->getParameter('id_typeAction_archiver');
+            $helper->creerAction($idTypeAction,$acte);
+            // m à j de la BDD
+            $manager = $this->getDoctrine()->getManager();
+            $manager->persist($acte);
+            $manager->flush();
+            return $this->redirectToRoute('consultation');
+                  
+        
+    }
+
+
+    
     /**
      * Affiche une page (avec les infos de l'acte) demandant confirmation à l'utilisateur pour la suppression d'un acte.
      * N.B: Ne crée pas d'action de suppression

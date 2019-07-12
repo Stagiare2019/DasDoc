@@ -86,13 +86,13 @@
        
 		 	var nTds = $('td',this);
 			
-        	var sTitle = $(nTds[3]).text();
+        	var sTitle = $(nTds[2]).text();
 	
 			if(sTitle.length >32 )
 			{
-				$(nTds[3]).text(sTitle.substr(0,33));
+				$(nTds[2]).text(sTitle.substr(0,33));
 			}
-			$(nTds[3]).attr( 'title', sTitle );
+			$(nTds[2]).attr( 'title', sTitle );
     	} );
      
     /* Init DataTables */
@@ -125,13 +125,13 @@
        
 		 	var nTds = $('td',this);
 			
-        	var sTitle = $(nTds[3]).text();
+        	var sTitle = $(nTds[2]).text();
 	
 			if(sTitle.length >32 )
 			{
-				$(nTds[3]).text(sTitle.substr(0,33));
+				$(nTds[2]).text(sTitle.substr(0,33));
 			}
-			$(nTds[3]).attr( 'title', sTitle );
+			$(nTds[2]).attr( 'title', sTitle );
     	} );
 
 		$('#attente tbody tr').each( function() {
@@ -155,7 +155,7 @@
 
 	/* partie valideur*/
 	
-$(document).ready(function() {
+	$(document).ready(function() {
 	   var oTable= $('#attentevalideur').DataTable( {
 	        "language": {
 	            "url": "/json/French_DataTable.json"
@@ -170,13 +170,13 @@ $(document).ready(function() {
        
 		 	var nTds = $('td',this);
 			
-        	var sTitle = $(nTds[3]).text();
+        	var sTitle = $(nTds[2]).text();
 	
 			if(sTitle.length >32 )
 			{
-				$(nTds[3]).text(sTitle.substr(0,33));
+				$(nTds[2]).text(sTitle.substr(0,33));
 			}
-			$(nTds[3]).attr( 'title', sTitle );
+			$(nTds[2]).attr( 'title', sTitle );
     	} );
 
 		
@@ -192,7 +192,7 @@ $(document).ready(function() {
 		
 	} );
 
-	{#partie actes validés#}
+	{#partie actes visés#}
 
 	$(document).ready(function() {
 	   var oTable= $('#valide').DataTable( {
@@ -209,13 +209,13 @@ $(document).ready(function() {
        
 		 	var nTds = $('td',this);
 			
-        	var sTitle = $(nTds[3]).text();
+        	var sTitle = $(nTds[2]).text();
 	
 			if(sTitle.length >32 )
 			{
-				$(nTds[3]).text(sTitle.substr(0,33));
+				$(nTds[2]).text(sTitle.substr(0,33));
 			}
-			$(nTds[3]).attr( 'title', sTitle );
+			$(nTds[2]).attr( 'title', sTitle );
     	} );
 
 		
@@ -250,13 +250,13 @@ $(document).ready(function() {
        
 		 	var nTds = $('td',this);
 			
-        	var sTitle = $(nTds[3]).text();
+        	var sTitle = $(nTds[2]).text();
 	
 			if(sTitle.length >32 )
 			{
-				$(nTds[3]).text(sTitle.substr(0,33));
+				$(nTds[2]).text(sTitle.substr(0,33));
 			}
-			$(nTds[3]).attr( 'title', sTitle );
+			$(nTds[2]).attr( 'title', sTitle );
     	} );
 
 
@@ -282,7 +282,7 @@ $(document).ready(function() {
 	{# Partie concernant le transmetteur #}
 
 	$(document).ready(function() {
-	$('#tabtransmettre').DataTable( {
+	 var oTable =$('#tabtransmettre').DataTable( {
 	        "language": {
 	            "url": "/json/French_DataTable.json"
 	        },
@@ -291,6 +291,19 @@ $(document).ready(function() {
 			
 	  
 	    } );
+
+		$('#tabtransmettre tbody tr').each( function() {
+       
+		 	var nTds = $('td',this);
+			
+        	var sTitle = $(nTds[2]).text();
+	
+			if(sTitle.length >32 )
+			{
+				$(nTds[2]).text(sTitle.substr(0,33));
+			}
+			$(nTds[2]).attr( 'title', sTitle );
+    	} );
 		
 		
 		$('#btntransmettre').click(function(){
@@ -307,6 +320,16 @@ $(document).ready(function() {
 			
 
 		});
+
+		 /* Init DataTables */
+ 
+		/* Apply the tooltips */
+		oTable.$('td[title]').tooltip( {
+			"delay": 0,
+			"track": true,
+			"fade": 250
+		} );
+
 	});
 	{#Partie concernant l'historique #}
 

@@ -3,6 +3,13 @@ security:
         App\Entity\Utilisateur:
             algorithm: argon2i
     role_hierarchy:
+        ROLE_AGENT: ROLE_USER
+        ROLE_VALIDEUR: ROLE_USER
+        ROLE_TRANSMETTEUR: ROLE_USER
+        ROLE_ADMIN: [ROLE_AGENT]
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+    
         
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
@@ -47,11 +54,12 @@ security:
     access_control:
 
         # pour désactiver la sécurité décommenter cette ligne
-        # - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-
          - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+             
+        # - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
         # ex : - { path: ^/xxx/xxx (url), roles: ROLE_XXX (role) }
 
-         - { path: ^/, roles: ROLE_USER }
+         #- { path: ^/, roles: ROLE_USER }
+         
          

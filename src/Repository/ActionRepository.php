@@ -35,6 +35,17 @@ class ActionRepository extends ServiceEntityRepository
         ;
     }
     */
+    
+    public function findByType($value)
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.fkType = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    
 
     /*
     public function findOneBySomeField($value): ?Action

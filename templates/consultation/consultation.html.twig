@@ -3,11 +3,8 @@
     Ce template affiche les actes en lien avec l'utilisateur (brouillons apr ex)
     et l'historique des 10 dernières actions de l'utilisateur.
 
-    N.B. : Les actions ne sont pas supprimés si l'acte qu'elle réfère est supprimé
-    (Ceci explique le {% if action.fkActe is not null %}).
 #}
 {% block body %}
-<<<<<<< HEAD
 <div class="container-fluid">
     <h2 class="text-center pt-3 pb-3">Tableau de bord</h2>
     <div class="row mt-5">
@@ -20,54 +17,25 @@
                   <thead>
                     <tr>
                       <th scope="col">Numéro</th>
-                      <th scope="col">Date</th>
                       <th scope="col">Nature</th>
                       <th scope="col">Matière</th>
                       <th scope="col">Objet de l'acte</th>
+                      <th scope="col">Dernière modification</th>
                       <th scope="col">Action</th>
                     </tr>
                   </thead>
                   <tbody>
+                 
+                    {% for brouillon in brouillons %}
                     <tr>
-                      <th scope="row" class="text-info">ST190230</th>
-                      <td>14/06/2019</td>
-                      <td>Délibération</td>
-                      <td>2.1 Documents d’urbanisme</td>
-                      <td>test</td>
-                      <td><button type="button" class="btn btn-primary">Reprendre</button></td>
+                      <th scope="row" class="text-info">{{brouillon.acte.numero}}</th>
+                      <td>{{brouillon.acte.getFkNature()}}</td>
+                      <td>{{brouillon.acte.getFkMatiere()}}</td>
+                      <td>{{brouillon.acte.objet}}</td>
+                      <td>{{brouillon.date|date("d/m/Y") }} </td>
+                      <td><a  class="btn btn-primary"  href="{{path('gestionnaire_modification',{'id':brouillon.acte.getId()})}}">Reprendre</a></td>
                     </tr>
-                    <tr>
-                      <th scope="row" class="text-info">ST190230</th>
-                      <td>15/06/2019</td>
-                      <td>Délibération</td>
-                      <td>2.1 Documents d’urbanisme</td>
-                      <td>VOIE PRIVEE VILLA DE CHENNEVIERES - TRANSFERT PROVISOIRE DES PREROGATIVES MUNICIPALES A L ADMINISTRATEUR PROVISOIRE DE LA COPROPRIETE POUR DES TRAVAUX DE VOIRIE.PDF</td>
-                      <td><button type="button" class="btn btn-primary">Reprendre</button></td>
-                    </tr>
-                    <tr>
-                      <th scope="row" class="text-info">ST190230</th>
-                      <td >16/06/2019</td>
-                      <td>Arrêté</td>
-                      <td>1.1 Marchés publics	</td>
-                      <td >test</td>
-                      <td><button type="button" class="btn btn-primary">Reprendre</button></td>
-                    </tr>
-                    <tr>
-                        <th scope="row" class="text-info">3</th>
-                        <td >17/06/2019</td>
-                        <td>Arrêté</td>
-                        <td>1.1 Marchés publics	</td>
-                        <td >VOIE PRIVEE VILLA DE CHENNEVIERES - TRANSFERT PROVISOIRE DES PREROGATIVES MUNICIPALES A L ADMINISTRATEUR PROVISOIRE DE LA COPROPRIETE POUR DES TRAVAUX DE VOIRIE.PDF</td>
-                        <td><button type="button" class="btn btn-primary">Reprendre</button></td>
-                      </tr>
-                      <tr>
-                          <th scope="row" class="text-info">3</th>
-                          <td >18/06/2019</td>
-                          <td>Arrêté</td>
-                          <td>1.1 Marchés publics	</td>
-                          <td >test</td>
-                          <td><button type="button" class="btn btn-primary">Reprendre</button></td>
-                      </tr>
+                    {% endfor %}
                   </tbody>
                 </table>
               
@@ -78,7 +46,9 @@
       <div class="col-6">
 
         {# Tableau actes en attente de validation visible si on est connecté en tant que Agent #}
-      
+
+        {% if app.user %}
+          {% if (is_granted('ROLE_AGENT') or is_granted('ROLE_TRANSMETTEUR')) %}
         <div class="card border-dark ">
           <div class="card-body ">
             <h3 class="card-title ">Actes en attente de validation</h3>
@@ -86,181 +56,108 @@
               <thead>
                 <tr>
                   <th scope="col">Numéro</th>
-                  <th scope="col">Date</th>
                   <th scope="col">Nature</th>
                   <th scope="col">Matière</th>
                   <th scope="col">Objet de l'acte</th>
+                  <th scope="col">Dernière modification</th>
                   <th scope="col">Etat</th>
                 </tr>
               </thead>
               <tbody>
+                {% for attenteVal in attenteVals %}
                 <tr>
-                  <th scope="row" class="text-info">ST190230</th>
-                  <td>14/06/2019</td>
-                  <td>Délibération</td>
-                  <td>2.1 Documents d’urbanisme</td>
-                  <td>test</td>
+                  <th scope="row" class="text-info">{{attenteVal.acte.numero}}</th>
+                  <td>{{attenteVal.acte.getFkNature()}}</td>
+                  <td>{{attenteVal.acte.getFkMatiere()}}</td>
+                  <td>{{attenteVal.acte.objet}}</td>
+                  <td>{{attenteVal.date|date("d/m/Y") }} </td>
                   <td><img src="/img/acte/sablier.png"/></td>
                 </tr>
-                <tr>
-                  <th scope="row" class="text-info">ST190230</th>
-                  <td>14/06/2019</td>
-                  <td>Délibération</td>
-                  <td>2.1 Documents d’urbanisme</td>
-                  <td>VOIE PRIVEE VILLA DE CHENNEVIERES - TRANSFERT PROVISOIRE DES PREROGATIVES MUNICIPALES A L ADMINISTRATEUR PROVISOIRE DE LA COPROPRIETE POUR DES TRAVAUX DE VOIRIE.PDF</td>
-                  <td><img src="/img/acte/sablier.png"/></td>
-                </tr>
-                <tr>
-                  <th scope="row" class="text-info">ST190230</th>
-                  <td >14/06/2019</td>
-                  <td>Arrêté</td>
-                  <td>1.1 Marchés publics	</td>
-                  <td>test</td>
-                  <td><img src="/img/acte/sablier.png"/></td>
-                </tr>
-                <tr>
-                    <th scope="row" class="text-info">3</th>
-                    <td >14/06/2019</td>
-                    <td>Arrêté</td>
-                    <td>1.1 Marchés publics	</td>
-                    <td>VOIE PRIVEE VILLA DE CHENNEVIERES - TRANSFERT PROVISOIRE DES PREROGATIVES MUNICIPALES A L ADMINISTRATEUR PROVISOIRE DE LA COPROPRIETE POUR DES TRAVAUX DE VOIRIE.PDF</td>
-                    <td><img src="/img/acte/sablier.png"/></td>
-                  </tr>
-                  <tr>
-                      <th scope="row" class="text-info">3</th>
-                      <td >14/06/2019</td>
-                      <td>Arrêté</td>
-                      <td>1.1 Marchés publics	</td>
-                      <td>test</td>
-                      <td><img src="/img/acte/sablier.png"/></td>
-                  </tr>
+                {% endfor %}
+                
               </tbody>
             </table>
 
           </div>
         </div>
-      
+          {% endif %}
+        
         {# Tableau actes en attente de validation visible si on est connecté en tant que Valideur #}
-
-        <div class="card border-dark d-none">
+         {% if is_granted('ROLE_VALIDEUR' )%}
+        <div class="card border-dark ">
           <div class="card-body ">
             <h3 class="card-title ">Actes en attente de validation</h3>
             <table class="table table-bordered mt-4 text-center" id="attentevalideur">
               <thead>
                 <tr>
                   <th scope="col">Numéro</th>
-                  <th scope="col">Date</th>
                   <th scope="col">Nature</th>
                   <th scope="col">Matière</th>
                   <th scope="col">Objet de l'acte</th>
-                  <th scope="col">Etat</th>
+                   <th scope="col">Dernière modification</th>
+                  <th scope="col">Action</th>
                 </tr>
               </thead>
               <tbody>
+                {% for attVal in attVals %}
                 <tr>
-                  <th scope="row" class="text-info">ST190230</th>
-                  <td>14/06/2019</td>
-                  <td>Délibération</td>
-                  <td>2.1 Documents d’urbanisme</td>
-                  <td>test</td>
-                  <td><button type="button" class="btn btn-primary">Valider</button></td>
+                  <th scope="row" class="text-info">{{attVal.acte.numero}}</th>
+                  <td>{{attVal.acte.getFkNature()}}</td>
+                  <td>{{attVal.acte.getFkMatiere()}}</td>
+                  <td>{{attVal.acte.objet}}</td>
+                   <td>{{attVal.date|date("d/m/Y") }} </td>
+                  <td>
+                      <a  href="{{path('gestionnaire_validation',{'id':attVal.acte.getId()})}}" ><img src="/img/acte/valider.png" /></a>
+                      &nbsp; &nbsp;
+                      <a  href="{{path('gestionnaire_refus',{'id':attVal.acte.getId()})}}" ><img src="/img/acte/croix.png"/></a>
+                   
+                  </td>
                 </tr>
-                <tr>
-                  <th scope="row" class="text-info">ST190230</th>
-                  <td>14/06/2019</td>
-                  <td>Délibération</td>
-                  <td>2.1 Documents d’urbanisme</td>
-                  <td>VOIE PRIVEE VILLA DE CHENNEVIERES - TRANSFERT PROVISOIRE DES PREROGATIVES MUNICIPALES A L ADMINISTRATEUR PROVISOIRE DE LA COPROPRIETE POUR DES TRAVAUX DE VOIRIE.PDF</td>
-                  <td><button type="button" class="btn btn-primary">Valider</button></td>
-                </tr>
-                <tr>
-                  <th scope="row" class="text-info">ST190230</th>
-                  <td >14/06/2019</td>
-                  <td>Arrêté</td>
-                  <td>1.1 Marchés publics	</td>
-                  <td>test</td>
-                  <td><button type="button" class="btn btn-primary">Valider</button></td>
-                </tr>
-                <tr>
-                    <th scope="row" class="text-info">3</th>
-                    <td >14/06/2019</td>
-                    <td>Arrêté</td>
-                    <td>1.1 Marchés publics	</td>
-                    <td>VOIE PRIVEE VILLA DE CHENNEVIERES - TRANSFERT PROVISOIRE DES PREROGATIVES MUNICIPALES A L ADMINISTRATEUR PROVISOIRE DE LA COPROPRIETE POUR DES TRAVAUX DE VOIRIE.PDF</td>
-                    <td><button type="button" class="btn btn-primary">Valider</button></td>
-                  </tr>
-                  <tr>
-                      <th scope="row" class="text-info">3</th>
-                      <td >14/06/2019</td>
-                      <td>Arrêté</td>
-                      <td>1.1 Marchés publics	</td>
-                      <td>test</td>
-                      <td><button type="button" class="btn btn-primary">Valider</button></td>
-                  </tr>
+                {% endfor %}
+                
               </tbody>
             </table>
           </div>
         </div>
+      {% endif %}
+      {% endif %}
       </div>
+    
     </div> 
       
     <div class="row mt-5">
       <div class="col-6 ">
           <div class="card border-dark ">
               <div class="card-body ">
-                <h3 class="card-title " >Actes validés</h3>
+                <h3 class="card-title " >Actes visés</h3>
                 <table class="table table-bordered mt-4 text-center" id="valide">
                   <thead>
                     <tr>
                       <th scope="col">Numéro</th>
-                      <th scope="col">Date</th>
                       <th scope="col">Nature</th>
                       <th scope="col">Matière</th>
                       <th scope="col">Objet de l'acte</th>
+                      <th scope="col">Dernière modification</th>
                       <th scope="col">Etat</th>
                     </tr>
                   </thead>
                   <tbody>
+                    {% for vise in vises %}
                     <tr>
-                      <th scope="row" class="text-info">ST190230</th>
-                      <td>14/06/2019</td>
-                      <td>Délibération</td>
-                      <td>2.1 Documents d’urbanisme</td>
-                      <td>test  </td>
-                      <td><img src="/img/acte/croix.png"/></td>
-                    </tr>
-                    <tr>
-                      <th scope="row" class="text-info">ST190230</th>
-                      <td>14/06/2019</td>
-                      <td>Délibération</td>
-                      <td>2.1 Documents d’urbanisme</td>
-                      <td > VOIE PRIVEE VILLA DE CHENNEVIERES - TRANSFERT PROVISOIRE DES PREROGATIVES MUNICIPALES A L ADMINISTRATEUR PROVISOIRE DE LA COPROPRIETE POUR DES TRAVAUX DE VOIRIE.PDF</td>
-                      <td><img src="/img/acte/valider.png"/></td>
-                    </tr>
-                    <tr>
-                      <th scope="row" class="text-info">ST190230</th>
-                      <td >14/06/2019</td>
-                      <td>Arrêté</td>
-                      <td>1.1 Marchés publics	</td>
-                      <td >test</td>
-                      <td><img src="/img/acte/croix.png"/></td>
-                    </tr>
-                    <tr>
-                        <th scope="row" class="text-info">3</th>
-                        <td >14/06/2019</td>
-                        <td>Arrêté</td>
-                        <td>1.1 Marchés publics	</td>
-                        <td >VOIE PRIVEE VILLA DE CHENNEVIERES - TRANSFERT PROVISOIRE DES PREROGATIVES MUNICIPALES A L ADMINISTRATEUR PROVISOIRE DE LA COPROPRIETE POUR DES TRAVAUX DE VOIRIE.PDF</td>
-                        <td><img src="/img/acte/valider.png"/></td>
-                      </tr>
-                      <tr>
-                          <th scope="row" class="text-info">3</th>
-                          <td >14/06/2019</td>
-                          <td>Arrêté</td>
-                          <td>1.1 Marchés publics	</td>
-                          <td >test</td>
+                      <th scope="row" class="text-info">{{vise.acte.numero}}</th>
+                      <td>{{vise.acte.getFkNature()}}</td>
+                      <td>{{vise.acte.getFkMatiere()}}</td>
+                      <td>{{vise.acte.objet}}</td>
+                      <td>{{vise.date|date("d/m/Y") }} </td>
+                      {% if vise.etat == 'Refusé' %}
+                          <td><img src="/img/acte/croix.png"/></td>
+                      {% else %}
                           <td><img src="/img/acte/valider.png"/></td>
-                      </tr>
+                      {% endif %}
+
+                    </tr>
+                    {% endfor %}
+                    
                   </tbody>
                 </table>
               <p><img src="/img/acte/croix.png"/> : refusé &nbsp; &nbsp;<img src="/img/acte/valider.png"/> : validé</p>
@@ -277,61 +174,78 @@
               <thead>
                 <tr>
                   <th scope="col">Numéro</th>
-                  <th scope="col">Date</th>
                   <th scope="col">Nature</th>
                   <th scope="col">Matière</th>
                   <th scope="col">Objet de l'acte</th>
                   <th scope="col">Etat</th>
+                  <th scope="col">Dernière modification</th>
                   <th scope="col">Actions</th>
                   
                 </tr>
               </thead>
               <tbody>
+               {% for BrouillonAachive in BrouillonAachives %}
                 <tr>
-                  <th scope="row" class="text-info">ST190230</th>
-                  <td>14/06/2019</td>
-                  <td>Délibération</td>
-                  <td>2.1 Documents d’urbanisme</td>
-                  <td>test</td>
-                  <td>transmis</td>
-                  <td><img src="/img/acte/archive.png"/></td>
+                  <th scope="row" class="text-info">{{BrouillonAachive.acte.numero}}</th>
+                  <td>{{BrouillonAachive.acte.getFkNature()}}</td>
+                  <td>{{BrouillonAachive.acte.getFkMatiere()}}</td>
+                  <td>{{BrouillonAachive.acte.objet}}</td>
+                  <td>{{BrouillonAachive.etat}}</td>
+                  <td>{{BrouillonAachive.date|date("d/m/Y") }} </td>
+                  <td>
+                     <a  href="{{path('gestionnaire_archive',{'id':  BrouillonAachive.acte.getId()})}}" ><img src="/img/acte/archive.png"/></a>
+                  </td>
+                 
                 </tr>
+               {% endfor %}
+
+               {% for ValidesAachive in ValidesAachives %}
                 <tr>
-                  <th scope="row" class="text-info">ST190230</th>
-                  <td>14/06/2019</td>
-                  <td>Délibération</td>
-                  <td>2.1 Documents d’urbanisme</td>
-                  <td>VOIE PRIVEE VILLA DE CHENNEVIERES - TRANSFERT PROVISOIRE DES PREROGATIVES MUNICIPALES A L ADMINISTRATEUR PROVISOIRE DE LA COPROPRIETE POUR DES TRAVAUX DE VOIRIE.PDF</td>
-                  <td>validé</td>
-                  <td><img src="/img/acte/archive.png"/></td>
+                  <th scope="row" class="text-info">{{ValidesAachive.acte.numero}}</th>
+                  <td>{{ValidesAachive.acte.getFkNature()}}</td>
+                  <td>{{ValidesAachive.acte.getFkMatiere()}}</td>
+                  <td>{{ValidesAachive.acte.objet}}</td>
+                  <td>{{ValidesAachive.etat}}</td>
+                  <td>{{ValidesAachive.date|date("d/m/Y") }}</td>
+                  <td> <a  href="{{path('gestionnaire_archive',{'id': ValidesAachive.acte.getId()})}}" ><img src="/img/acte/archive.png"/></a></td>
                 </tr>
+               {% endfor %}
+
+               {% for RefusesAachive in RefusesAachives %}
                 <tr>
-                  <th scope="row" class="text-info">ST190230</th>
-                  <td >14/06/2019</td>
-                  <td>Arrêté</td>
-                  <td>1.1 Marchés publics	</td>
-                  <td>test</td>
-                  <td>refusé</td>
-                  <td><img src="/img/acte/archive.png"/></td>
+                  <th scope="row" class="text-info">{{RefusesAachive.acte.numero}}</th>
+                  <td>{{RefusesAachive.acte.getFkNature()}}</td>
+                  <td>{{RefusesAachive.acte.getFkMatiere()}}</td>
+                  <td>{{RefusesAachive.acte.objet}}</td>
+                  <td>{{RefusesAachive.etat}}</td>
+                  <td>{{RefusesAachive.date|date("d/m/Y") }}</td>
+                  <td> <a  href="{{path('gestionnaire_archive',{'id': RefusesAachive.acte.getId()})}}" ><img src="/img/acte/archive.png"/></a></td>
                 </tr>
+               {% endfor %}
+
+               {% for TransmisAachive in TransmisAachives %}
                 <tr>
-                    <th scope="row" class="text-info">3</th>
-                    <td >14/06/2019</td>
-                    <td>Arrêté</td>
-                    <td>1.1 Marchés publics	</td>
-                    <td>VOIE PRIVEE VILLA DE CHENNEVIERES - TRANSFERT PROVISOIRE DES PREROGATIVES MUNICIPALES A L ADMINISTRATEUR PROVISOIRE DE LA COPROPRIETE POUR DES TRAVAUX DE VOIRIE.PDF</td>
-                    <td>annulé</td>
-                    <td><img src="/img/acte/archive.png"/></td>
-                  </tr>
-                  <tr>
-                      <th scope="row" class="text-info">3</th>
-                      <td >14/06/2019</td>
-                      <td>Arrêté</td>
-                      <td>1.1 Marchés publics	</td>
-                      <td>test</td>
-                      <td>annulé</td>
-                      <td><img src="/img/acte/archive.png"/></td>
-                  </tr>
+                  <th scope="row" class="text-info">{{TransmisAachive.acte.numero}}</th>
+                  <td>{{TransmisAachive.acte.getFkNature()}}</td>
+                  <td>{{TransmisAachive.acte.getFkMatiere()}}</td>
+                  <td>{{TransmisAachive.acte.objet}}</td>
+                  <td>{{TransmisAachive.etat}}</td>
+                  <td>{{TransmisAachive.date|date("d/m/Y") }}</td>
+                  <td> <a  href="{{path('gestionnaire_archive',{'id': TransmisAachive.acte.getId()})}}" ><img src="/img/acte/archive.png"/></a></td>
+                </tr>
+               {% endfor %}
+
+               {% for AnnulesAachive  in AnnulesAachives %}
+                <tr>
+                  <th scope="row" class="text-info">{{AnnulesAachive.acte.numero}}</th>
+                  <td>{{AnnulesAachive.acte.getFkNature()}}</td>
+                  <td>{{AnnulesAachive.acte.getFkMatiere()}}</td>
+                  <td>{{AnnulesAachive.acte.objet}}</td>
+                  <td>{{AnnulesAachive.etat}}</td>
+                  <td>{{AnnulesAachive.date|date("d/m/Y") }}</td>
+                  <td> <a  href="{{path('gestionnaire_archive',{'id': AnnulesAachive.acte.getId()})}}" ><img src="/img/acte/archive.png"/></a></td>
+                </tr>
+               {% endfor %}
               </tbody>
             </table>
           
@@ -340,7 +254,8 @@
       
       </div>
   </div>
-  
+   {% if app.user %}
+          {% if is_granted('ROLE_TRANSMETTEUR') %}
    <div class="row"> <a class="btn btn-primary btn-lg  ml-3 my-3 text-white "  id="btntransmettre" href="#tabtransmettre">Actes à transmettre </a> </div>
     <div class=" mx-3 d-none "  id="transmettre">
      
@@ -348,37 +263,35 @@
               <thead>
                 <tr>
                   <th scope="col">Numéro</th>
-                  <th scope="col">Date</th>
                   <th scope="col">Nature</th>
                   <th scope="col">Matière</th>
                   <th scope="col">Objet de l'acte</th>
+                  <th scope="col">Dernière modification</th>
                   <th scope="col">Action</th>
     
                 </tr>
               </thead>
               <tbody>
+                {% for Atransmettre in Atransmettres %}
                 <tr>
-                  <th scope="row" class="text-info">ST190230</th>
-                  <td>14/06/2019</td>
-                  <td>Délibération</td>
-                  <td>2.1 Documents d’urbanisme</td>
-                  <td>test</td>
-                  <td><button type="button" class="btn btn-primary">Transmettre</button></td>
-                  
+                  <th scope="row" class="text-info">{{Atransmettre.acte.numero}}</th>
+                 
+                  <td>{{Atransmettre.acte.getFkNature()}}</td>
+                  <td>{{Atransmettre.acte.getFkMatiere()}}</td>
+                  <td>{{Atransmettre.acte.objet}}</td>
+                  <td>{{Atransmettre.date|date("d/m/Y") }}</td>
+                  <td>
+                        <a href="{{path('gestionnaire_transmission',{'id':Atransmettre.acte.getId()})}}"  class="btn btn-primary">Transmettre</a>
+                        <a href="{{path('gestionnaire_annulation',{'id':Atransmettre.acte.getId()})}}"  class="btn btn-primary">Annuler</a>
+                  </td>
                 </tr>
-                <tr>
-                  <th scope="row" class="text-info">ST190230</th>
-                  <td>14/06/2019</td>
-                  <td>Délibération</td>
-                  <td>2.1 Documents d’urbanisme</td>
-                  <td>VOIE PRIVEE VILLA DE CHENNEVIERES - TRANSFERT PROVISOIRE DES PREROGATIVES MUNICIPALES A L ADMINISTRATEUR PROVISOIRE DE LA COPROPRIETE POUR DES TRAVAUX DE VOIRIE.PDF</td>
-                  <td><button type="button" class="btn btn-primary">Transmettre</button></td>
-                  
-                </tr>
+                {% endfor %}
                 
               </tbody>
       </table>
   </div>
+  {% endif %}
+  {% endif %}
   
     <div class="row"><a class="btn btn-primary btn-lg  ml-3 my-3 text-white"  id="btnhistorique" href="#tabhistorique">Historique des actions </a> </div>
     <div class=" mx-3 d-none "  id="historique">
@@ -387,45 +300,32 @@
               <thead>
                 <tr>
                   <th scope="col">Numéro</th>
-                  <th scope="col">Date</th>
                   <th scope="col">Nature</th>
                   <th scope="col">Matière</th>
                   <th scope="col">Objet de l'acte</th>
+                   <th scope="col">Dernière modification</th>
                   <th scope="col">Type</th>
     
                 </tr>
               </thead>
               <tbody>
+                {% for historique in historiques %}
                 <tr>
-                  <th scope="row" class="text-info">ST190230</th>
-                  <td>14/06/2019</td>
-                  <td>Délibération</td>
-                  <td>2.1 Documents d’urbanisme</td>
-                  <td>test</td>
-                  <td>Modification</td>
+                  <th scope="row" class="text-info">{{historique.acte.numero}}</th>
+                  <td>{{historique.acte.getFkNature()}}</td>
+                  <td>{{historique.acte.getFkMatiere()}}</td>
+                  <td>{{historique.acte.objet}}</td>
+                   <td>{{historique.date|date("d/m/Y") }} </td>
+                  <td>{{historique.type}}</td>
                   
                 </tr>
-                <tr>
-                  <th scope="row" class="text-info">ST190230</th>
-                  <td>14/06/2019</td>
-                  <td>Délibération</td>
-                  <td>2.1 Documents d’urbanisme</td>
-                  <td>VOIE PRIVEE VILLA DE CHENNEVIERES - TRANSFERT PROVISOIRE DES PREROGATIVES MUNICIPALES A L ADMINISTRATEUR PROVISOIRE DE LA COPROPRIETE POUR DES TRAVAUX DE VOIRIE.PDF</td>
-                  <td>Ajout</td>
-                  
-                </tr>
-                
+                {% endfor %}
+               
               </tbody>
       </table>
   </div>
 </div>
     
-  
-    
-    
-
-    
- 
 {% endblock %}
 {% block scripts %}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -436,76 +336,3 @@
 
 {% endblock %}
 
-=======
-	
-	<h2 class="text-center pt-3 pb-3">Tableau de bord</h2>
-
-	{# Module : "Brouillons" #}
-		<h4>Brouillons</h4>
-
-		<table id="brouillons" class="table table-bordered table-striped table-hover">
-		    <thead>
-			    <tr>
-			      	<th class="th-sm">Numéro</th>
-					<th class="th-sm">Nature</th>
-			      	<th class="th-sm">Matière</th>
-			      	<th class="th-sm">Objet</th>
-			      	<th class="th-sm">Actions</th>
-			    </tr>
-			</thead>
-			<tbody>
-
-			    {% for acte in brouillons %}
-				    <tr>
-				    	<td><a href="{{ pdf_relative_directory ~ acte.nomPDF }}" target="_blank">
-				    		{{ acte.numero }}</a></td>
-				    	<td>{{ acte.fkNature }}</td>
-				    	<td>{{ acte.fkMatiere }}</td>
-						<td>{{ acte.objet }}</td>
-						<td> {# 2 pictos séparés par un "/" #}
-						    <a href={{ path('gestionnaire_suppression', {'id': acte.id}) }}>
-						    	<img src="/img/acte/supprimer.png" alt="supprimer">
-						    </a>
-						    /
-						    <a href={{ path('gestionnaire_modification', {'id': acte.id}) }}>
-						    	<img src="/img/acte/editer.png" alt="modifier">
-						    </a>
-						</td>
-				    </tr>
-		    	{% endfor %}
-
-			</tbody>
-		</table>
-
-	{# Module : "Historique des actions" #}
-		<h4>Historique des actions</h4>
-
-		<table class="table table-bordered table-striped table-hover">
-		    <thead>
-			    <tr>
-			    	<th scope="col">Action</th>
-			    	<th scope="col">Date</th>
-			    	<th scope="col">Numero</th>
-			    	<th scope="col">Objet de l'acte</th>
-		    	</tr>
-		    </thead>
-		    <tbody>
-
-		    	{% for action in historique %}
-				    <tr>
-				    	<td>{{ action.fkType }}</a></td>
-				    	<td>{{ action.date|date('d/m/Y') }}</a></td>
-
-				    	{% if action.fkActe is not null %}
-						    <td><a href="{{ pdf_relative_directory ~ action.fkActe.nomPDF }}" target="_blank">{{ action.fkActe.numero }}</a></td>
-						    <td>{{ action.fkActe.objet }}</td>
-				    	{% endif %}
-
-				    </tr>
-		    	{% endfor %}
-
-		    </tbody>
-	    </table>
-
-{% endblock %}
->>>>>>> 49409566183cf74951a5ea8ce73598bafdb60208
