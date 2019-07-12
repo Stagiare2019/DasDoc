@@ -7,8 +7,13 @@ parameters:
     locale: 'fr'
 
     # Emplacement des pdfs
-    pdf_directory: '%kernel.project_dir%/public/FAUXDGS/'
+    pdf_directory: '%kernel.project_dir%/public/%pdf_relative_directory%'
     pdf_relative_directory: 'FAUXDGS/'
+
+    # Emplacement des dossiers pour l'import
+    import_csv_relative_directory: 'IMPORT/CSV/'
+    import_pdf_relative_directory: 'IMPORT/PDF/'
+    import_pdf_directory: '%kernel.project_dir%/public/%import_pdf_relative_directory%'
 
     # Emplacement des entitys
     entity_directory: 'App\Entity\'

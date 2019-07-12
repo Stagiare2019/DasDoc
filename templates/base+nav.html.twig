@@ -64,6 +64,12 @@ Ce template hérite de la base et lui ajoute une barre de navigation :
 							<a class="dropdown-item" href={{ path('admin_dashboard') }}>
 								Gérer les groupes et les utilisateurs
 							</a>
+							<a class="dropdown-item" href={{ path('admin_importCSV') }}>
+								Importer des données CSV
+							</a>
+							<a class="dropdown-item" href={{ path('admin_importPDF') }}>
+								Importer des fichiers PDF
+							</a>
 							<a class="dropdown-item" href={{ path('admin_lister', {'entity': 'EtatActe'}) }}>
 								Éditer les états d'acte
 							</a>

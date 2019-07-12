@@ -124,7 +124,7 @@ class GestionnaireActeHelper {
             $nomsPDFAvecObjetARenommer = array();
             $nomsPDFASupprimer = array();
 
-            // Si suppression : toutes les annexes sont à supprimer
+            // Si suppression : toutes les annexes sont à supprimer et aucunes à renommer
             if (null === $form) {
                 $nomsPDFASupprimer = $this->getArrayNomPDFAnnexes($acte);
             }

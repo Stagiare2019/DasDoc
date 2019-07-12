@@ -21,6 +21,16 @@ class Matiere
     private $id;
 
     /**
+     * @ORM\Column(type="string", length=8, unique=true)
+     */
+    private $code;
+
+    /**
+     * @ORM\Column(type="string", length=120, unique=true)
+     */
+    private $nom;
+
+    /**
      * @ORM\Column(type="string", length=127, unique=true)
      */
     private $libelle;
@@ -49,6 +59,28 @@ class Matiere
     public function getLibelle(): ?string
     {
         return $this->libelle;
+    }
+
+    public function setCode(string $code): self
+    {
+        $this->code = $code;
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setNom(string $nom): self
+    {
+        $this->nom = $nom;
+        return $this;
+    }
+
+    public function getNom(): ?string
+    {
+        return $this->nom;
     }
 
     public function setLibelle(string $libelle): self

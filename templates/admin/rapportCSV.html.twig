@@ -1,0 +1,16 @@
+{% extends "base+nav.html.twig" %}
+{# 
+    Ce template affiche une liste des enregistrements d'une entité fonctionnelle
+    (voir src/Controller/AdminController.php pour la définition d'entité fonctionnelle)
+#}
+{% block body %}
+
+	<h2 class="text-center pt-3 pb-3">Rapport de l'import</h2>
+
+	<p>Actes importés : <strong>{{ nbAjouts }} sur {{ nbLignes }}</strong></p>
+
+	<p>{{ nbDoublons }} étaient déjà présents dans la base de données ou le fichier CSV lui-même.</p>
+
+	<p>{{ nbNonConformes }} n'étaient pas conformes.</p>
+
+{% endblock %}

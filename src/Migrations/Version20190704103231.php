@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190612090826 extends AbstractMigration
+final class Version20190704103231 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -46,9 +46,13 @@ final class Version20190612090826 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_47CC8C928E8608A6 ON action (fk_utilisateur_id)');
         $this->addSql('CREATE TABLE etat_acte (id INT NOT NULL, libelle VARCHAR(63) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_6056D389A4D60759 ON etat_acte (libelle)');
-        $this->addSql('CREATE TABLE famille_matiere (id INT NOT NULL, libelle VARCHAR(63) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE famille_matiere (id INT NOT NULL, code VARCHAR(8) NOT NULL, nom VARCHAR(120) NOT NULL, libelle VARCHAR(63) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_5C7E5DA477153098 ON famille_matiere (code)');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_5C7E5DA46C6E55B5 ON famille_matiere (nom)');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_5C7E5DA4A4D60759 ON famille_matiere (libelle)');
-        $this->addSql('CREATE TABLE matiere (id INT NOT NULL, fk_famille_id INT NOT NULL, libelle VARCHAR(127) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE matiere (id INT NOT NULL, fk_famille_id INT NOT NULL, code VARCHAR(8) NOT NULL, nom VARCHAR(120) NOT NULL, libelle VARCHAR(127) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_9014574A77153098 ON matiere (code)');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_9014574A6C6E55B5 ON matiere (nom)');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_9014574AA4D60759 ON matiere (libelle)');
         $this->addSql('CREATE INDEX IDX_9014574A67C9B117 ON matiere (fk_famille_id)');
         $this->addSql('CREATE TABLE motcle (id INT NOT NULL, libelle VARCHAR(63) NOT NULL, PRIMARY KEY(id))');
@@ -58,7 +62,7 @@ final class Version20190612090826 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_32EC2CF7A767B8C7 ON motcle_acte (acte_id)');
         $this->addSql('CREATE TABLE nature_acte (id INT NOT NULL, libelle VARCHAR(63) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_38F2A57AA4D60759 ON nature_acte (libelle)');
-        $this->addSql('CREATE TABLE piece_jointe (id INT NOT NULL, fk_acte_id INT NOT NULL, nom_pdf VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE piece_jointe (id INT NOT NULL, fk_acte_id INT NOT NULL, objet VARCHAR(255) NOT NULL, nom_pdf VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_AB5111D4BC3AFBDF ON piece_jointe (nom_pdf)');
         $this->addSql('CREATE INDEX IDX_AB5111D4574885EB ON piece_jointe (fk_acte_id)');
         $this->addSql('CREATE TABLE service (id INT NOT NULL, libelle VARCHAR(63) NOT NULL, PRIMARY KEY(id))');

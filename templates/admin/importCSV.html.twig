@@ -1,0 +1,24 @@
+{% extends "base+nav.html.twig" %}
+{# 
+    Ce template affiche une liste des enregistrements d'une entité fonctionnelle
+    (voir src/Controller/AdminController.php pour la définition d'entité fonctionnelle)
+#}
+{% block body %}
+
+	<h2 class="text-center pt-3 pb-3">Import de masse</h2>
+
+	{% if fichierPresent %}
+
+		<p>Le fichier csv "public/{{ import_csv_relative_directory }}data.csv" est présent.</p>
+		
+		<form method="post">
+			<div class="text-center">
+				<button class="btn btn-success col-md-2" type="submit" name="start">Démarrer l'importation</button>
+			</div>
+		</form>
+
+	{% else %}
+		<p>Le fichier csv "public/{{ import_csv_relative_directory }}data.csv" est absent.</p>
+	{% endif %}
+
+{% endblock %}
