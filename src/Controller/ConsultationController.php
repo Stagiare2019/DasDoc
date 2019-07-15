@@ -135,7 +135,7 @@ class ConsultationController extends AbstractController
         
 
         $ValidesAachives=array();
-        foreach(   $envoyerTrans_action as   $envoyerTrans_action)
+        foreach(   $envoyerTrans_actions as   $envoyerTrans_action)
         {
             //j'envoie à archiver ceux avec date > 30j
             $delai=(int)  $envoyerTrans_action->getDate()->diff( new \DateTime('now'))->format('%a');
