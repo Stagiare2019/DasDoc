@@ -47,4 +47,21 @@ class ActeRepository extends ServiceEntityRepository
         ;
     }
     */
+
+
+    // /**
+    //  * @return Acte[] Returns an array of Acte objects 
+    //  */
+    
+    // permet de selectionner les actes enregistrés comme brouillon
+    // public function findByActeBrouillons()
+    // {
+    //     return $this->createQueryBuilder('a')
+    //         ->andWhere('a.fkEtat = :val')
+    //         ->setParameter('val', 1)
+    //         ->getQuery()
+    //         ->getResult()
+    //     ;
+    // }
+    
 }

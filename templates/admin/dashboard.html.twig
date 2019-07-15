@@ -3,7 +3,7 @@
     Ce template affiche un dashboard pour la gestion des groupes et des utilisateurs
 #}
 {% block body %}
-
+<div class="container">
 	<h2 class="text-center pt-3 pb-3">Tableau de bord</h2>
 
 	<h3 class="pt-3 pb-3"><u>Utilisateurs</u></h3>
@@ -22,7 +22,7 @@
 		    	{% for utilisateur in utilisateurs %}
 				    <tr>
 						<td>{{ utilisateur.email }}</td>
-						<td>{{ utilisateur.roles[0] }}</td>
+						<td>{{ utilisateur.roles[0]}}</td>
 					    <td><a href="#">faux lien</a></td>
 				    </tr>
 		    	{% endfor %}
@@ -38,5 +38,5 @@
 				class="btn btn-primary col-md-2">
 			</div>
 		</form>
-
+</div>
 {% endblock %}

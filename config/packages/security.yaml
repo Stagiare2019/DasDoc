@@ -2,7 +2,15 @@ security:
     encoders:
         App\Entity\Utilisateur:
             algorithm: argon2i
+    role_hierarchy:
+        ROLE_AGENT: ROLE_USER
+        ROLE_VALIDEUR: ROLE_USER
+        ROLE_TRANSMETTEUR: ROLE_USER
+        ROLE_ADMIN: [ROLE_AGENT]
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
+    
+        
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         # used to reload user from session & other features (e.g. switch_user)
@@ -46,11 +54,18 @@ security:
     access_control:
 
         # pour désactiver la sécurité décommenter cette ligne
-        # - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-
+        #- { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+             
+        # - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
         # ex : - { path: ^/xxx/xxx (url), roles: ROLE_XXX (role) }
 
+<<<<<<< HEAD
          - { path: ^/, roles: ROLE_USER }
          
+=======
+         #- { path: ^/, roles: ROLE_USER }
+         
+         
+>>>>>>> 3e92714d35492c213901c611f15320c15eff3829

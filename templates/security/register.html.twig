@@ -5,12 +5,12 @@
 #}
 
 {% block body %}
-
+<div class="container">
 	{# Cette div sert à espacer le form et le nav #}
 	<div class="mt-5 mb-5"></div>
 
 	{{ form_start(form) }}
-
+	{{ form_row(form.roles, {'label': "roles"}) }}
 	{{ form_row(form.email, {'label': "Email"}) }}
 	{{ form_row(form.password, {'label': "Mot de passe"}) }}
 	{{ form_row(form.confirm_password, {'label': "Confirmer mot de passe"}) }}
@@ -21,5 +21,5 @@
 	</div>
 
 	{{ form_end(form) }}
-
+</div>
 {% endblock %}

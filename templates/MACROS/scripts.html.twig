@@ -72,12 +72,295 @@
 			crossorigin="anonymous"></script>
 	<script>
 	$(document).ready(function() {
-	    $('.datatable').DataTable( {
+	   var oTable = $('#brouillon').DataTable( {
 	        "language": {
 	            "url": "/json/French_DataTable.json"
-	        }
+	        },
+			"order": [[ 1, "desc" ]],
+			 "searching": false
+			
+	  
 	    } );
+
+		$('#brouillon tbody tr').each( function() {
+       
+		 	var nTds = $('td',this);
+			
+        	var sTitle = $(nTds[2]).text();
+	
+			if(sTitle.length >32 )
+			{
+				$(nTds[2]).text(sTitle.substr(0,33));
+			}
+			$(nTds[2]).attr( 'title', sTitle );
+    	} );
+     
+    /* Init DataTables */
+ 
+    /* Apply the tooltips */
+    oTable.$('td[title]').tooltip( {
+        "delay": 0,
+        "track": true,
+        "fade": 250
+    } );
+
+		
 	} );
+
+	{# partie Acte en attente de validation #}
+
+	/*partie Agent */
+	$(document).ready(function() {
+	   var oTable= $('#attente').DataTable( {
+	        "language": {
+	            "url": "/json/French_DataTable.json"
+	        },
+			"order": [[ 1, "desc" ]],
+			 "searching": false
+			
+	  
+	    } );
+
+		$('#attente tbody tr').each( function() {
+       
+		 	var nTds = $('td',this);
+			
+        	var sTitle = $(nTds[2]).text();
+	
+			if(sTitle.length >32 )
+			{
+				$(nTds[2]).text(sTitle.substr(0,33));
+			}
+			$(nTds[2]).attr( 'title', sTitle );
+    	} );
+
+		$('#attente tbody tr').each( function() {
+       
+		 	var nTds = $('td',this);
+		
+			$(nTds[4]).attr( 'title', 'en attente de validation' );
+    	} );
+     
+    /* Init DataTables */
+ 
+    /* Apply the tooltips */
+    oTable.$('td[title]').tooltip( {
+        "delay": 0,
+        "track": true,
+        "fade": 250
+    } );
+
+		
+	} );
+
+	/* partie valideur*/
+	
+	$(document).ready(function() {
+	   var oTable= $('#attentevalideur').DataTable( {
+	        "language": {
+	            "url": "/json/French_DataTable.json"
+	        },
+			"order": [[ 1, "desc" ]],
+			 "searching": false
+			
+	  
+	    } );
+
+		$('#attentevalideur tbody tr').each( function() {
+       
+		 	var nTds = $('td',this);
+			
+        	var sTitle = $(nTds[2]).text();
+	
+			if(sTitle.length >32 )
+			{
+				$(nTds[2]).text(sTitle.substr(0,33));
+			}
+			$(nTds[2]).attr( 'title', sTitle );
+    	} );
+
+		
+    /* Init DataTables */
+ 
+    /* Apply the tooltips */
+    oTable.$('td[title]').tooltip( {
+        "delay": 0,
+        "track": true,
+        "fade": 250
+    } );
+
+		
+	} );
+
+	{#partie actes visés#}
+
+	$(document).ready(function() {
+	   var oTable= $('#valide').DataTable( {
+	        "language": {
+	            "url": "/json/French_DataTable.json"
+	        },
+			"order": [[ 1, "desc" ]],
+			 "searching": false
+			
+	  
+	    } );
+
+		$('#valide tbody tr').each( function() {
+       
+		 	var nTds = $('td',this);
+			
+        	var sTitle = $(nTds[2]).text();
+	
+			if(sTitle.length >32 )
+			{
+				$(nTds[2]).text(sTitle.substr(0,33));
+			}
+			$(nTds[2]).attr( 'title', sTitle );
+    	} );
+
+		
+     
+     
+    /* Init DataTables */
+ 
+    /* Apply the tooltips */
+    oTable.$('td[title]').tooltip( {
+        "delay": 0,
+        "track": true,
+        "fade": 250
+    } );
+
+		
+	} );
+
+	{#Partie actes à archivés #}
+
+	$(document).ready(function() {
+	   var oTable= $('#archive').DataTable( {
+	        "language": {
+	            "url": "/json/French_DataTable.json"
+	        },
+			"order": [[ 1, "desc" ]],
+			 "searching": false
+			
+	  
+	    } );
+
+		$('#archive tbody tr').each( function() {
+       
+		 	var nTds = $('td',this);
+			
+        	var sTitle = $(nTds[2]).text();
+	
+			if(sTitle.length >32 )
+			{
+				$(nTds[2]).text(sTitle.substr(0,33));
+			}
+			$(nTds[2]).attr( 'title', sTitle );
+    	} );
+
+
+		$('#archive tbody tr').each( function() {
+       
+		 	var nTds = $('td',this);
+		
+			$(nTds[5]).attr( 'title', 'archiver' );
+    	} );
+     
+    /* Init DataTables */
+ 
+    /* Apply the tooltips */
+    oTable.$('td[title]').tooltip( {
+        "delay": 0,
+        "track": true,
+        "fade": 250
+    } );
+
+		
+	} );
+
+	{# Partie concernant le transmetteur #}
+
+	$(document).ready(function() {
+	 var oTable =$('#tabtransmettre').DataTable( {
+	        "language": {
+	            "url": "/json/French_DataTable.json"
+	        },
+			"order": [[ 1, "desc" ]],
+			 "searching": false
+			
+	  
+	    } );
+
+		$('#tabtransmettre tbody tr').each( function() {
+       
+		 	var nTds = $('td',this);
+			
+        	var sTitle = $(nTds[2]).text();
+	
+			if(sTitle.length >32 )
+			{
+				$(nTds[2]).text(sTitle.substr(0,33));
+			}
+			$(nTds[2]).attr( 'title', sTitle );
+    	} );
+		
+		
+		$('#btntransmettre').click(function(){
+			
+			if($('#transmettre').hasClass("d-none"))
+			{
+				$('#transmettre').removeClass('d-none');
+				
+			}
+			else
+			{
+				$('#transmettre').addClass("d-none")
+			}
+			
+
+		});
+
+		 /* Init DataTables */
+ 
+		/* Apply the tooltips */
+		oTable.$('td[title]').tooltip( {
+			"delay": 0,
+			"track": true,
+			"fade": 250
+		} );
+
+	});
+	{#Partie concernant l'historique #}
+
+	$(document).ready(function() {
+	$('#tabhistorique').DataTable( {
+	        "language": {
+	            "url": "/json/French_DataTable.json"
+	        },
+			"order": [[ 1, "desc" ]],
+			 "searching": false
+			
+	  
+	    } );
+		
+		
+		$('#btnhistorique').click(function(){
+			
+			if($('#historique').hasClass("d-none"))
+			{
+				$('#historique').removeClass('d-none');
+				
+			}
+			else
+			{
+				$('#historique').addClass("d-none")
+			}
+			
+
+		});
+	});
+
 	</script>
 	{#
 		dépendances (voir "https://cdn.datatables.net/" (sélectionner bootstrap 4)) : 
@@ -87,6 +370,7 @@
 		dernières versions depuis le 04/06/2019 
 	#}
 
+	
 {% endmacro %}
 
 {# Scripts assurant le fonctionnement des tagsinput #}
@@ -113,3 +397,5 @@
   	#}
 
 {% endmacro %}
+
+

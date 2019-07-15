@@ -35,7 +35,7 @@
 {% endblock %}
 
 {% block body %}
-
+<div class="container">
 	{# Titre du formulaire #}
 		{% if creation %}
 			<h2 class="text-center pt-3 pb-3">Ajouter un acte</h2>
@@ -187,7 +187,7 @@
 		{% do form.dateEffectiviteFin.setRendered %}
 
 		{{ form_end(form) }}
-
+</div>
 {% endblock %}
 
 {% block scripts %}
@@ -253,5 +253,5 @@
   			return false;
   		}
   	</script>
-
+</div>
 {% endblock %}

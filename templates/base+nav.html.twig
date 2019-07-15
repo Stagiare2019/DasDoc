@@ -51,6 +51,8 @@ Ce template hérite de la base et lui ajoute une barre de navigation :
 		        <ul class="navbar-nav ml-auto">
 		          
 		          	{# Le dropdown d'admnistration #}
+				{% if app.user %}
+					{% if (is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')) %}
 		          	<div class="dropdown">
 						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
 
@@ -89,7 +91,8 @@ Ce template hérite de la base et lui ajoute une barre de navigation :
 
 						</div>
 					</div>
-
+					 {% endif %}
+				 {% endif %}
 					{# Bouton de déconnexion #}
 				   	<li class="nav-item">
 						<a class="nav-link" href={{ path('security_logout') }}>
@@ -111,5 +114,6 @@ Ce template hérite de la base et lui ajoute une barre de navigation :
 	{% import "MACROS/scripts.html.twig" as scripts %}
 
 	{{ scripts.dropdown() }}
-
+	
+	
 {% endblock %}
