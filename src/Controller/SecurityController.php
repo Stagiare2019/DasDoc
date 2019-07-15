@@ -23,7 +23,7 @@ class SecurityController extends AbstractController
     /**
      * Affiche et traite un formulaire de login
      *
-     * @Route("/login", name="security_login")
+     * @Route("/", name="security_login")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {

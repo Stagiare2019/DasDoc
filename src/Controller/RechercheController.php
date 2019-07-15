@@ -17,7 +17,7 @@ Ce controleur est en charge de la recherche d'actes (les filtres et la manières
 class RechercheController extends AbstractController
 {
     /**
-     * @Route("/", name="recherche")
+     * @Route("/recherche", name="recherche")
      * La fonction de recherche affiche le form, le traite et affiche les résultats.
      * Le filtrage des résultats se fait en 3 étapes à cause de la nature des données de filtrage.
      */
