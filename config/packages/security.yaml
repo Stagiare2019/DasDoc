@@ -61,6 +61,11 @@ security:
 
         # ex : - { path: ^/xxx/xxx (url), roles: ROLE_XXX (role) }
 
+<<<<<<< HEAD
+         - { path: ^/, roles: ROLE_USER }
+         
+=======
          #- { path: ^/, roles: ROLE_USER }
          
          
+>>>>>>> 3e92714d35492c213901c611f15320c15eff3829
